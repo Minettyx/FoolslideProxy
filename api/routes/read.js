@@ -2,17 +2,20 @@ const express = require('express');
 const router = express.Router();
 const apicache = require('apicache');
 const mangaworld = require('../sources/mangaworld');
+const juinjutsu = require('../sources/juinjutsu');
 
 var cache = apicache.middleware;
 
-router.post('/:manga/:volume/:chapter', cache("5 minutes"), async (req, res, next) => {try {
+router.post('/:chapter', cache("5 minutes"), async (req, res, next) => {try {
 
   res.set('Content-Type', 'text/html');
 
   var data = [];
 
-  if(req.params.manga.includes("mw¥")) {
-    data = await mangaworld.chapter(req.params.manga.split("¥")[1].replace('ƒ', '/'), req.params.chapter);
+  if(req.params.chapter.includes("mw¥")) {
+    data = await mangaworld.chapter(req.params.chapter.split("¥")[1].split('ƒ').join('/'));
+  } else if(req.params.chapter.includes("jj¥")) {
+    data = await juinjutsu.chapter(req.params.chapter.split("¥")[1].split('ƒ').join('/'));
   } else {
     res.status(404).json({});
     return;

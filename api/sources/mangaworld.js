@@ -1,7 +1,7 @@
 const htmlParser = require('node-html-parser');
 const got = require('got');
 
-var MangaCover = (function() {
+var Provider = (function() {
     let methods = {};
   
     methods.search = async function(query) {
@@ -57,7 +57,7 @@ var MangaCover = (function() {
 
             var cap = {}
             cap.title = chap.querySelector("span").innerHTML;
-            cap.url = '/read/mw¥'+chap.getAttribute("href").split('/manga/')[1].split('/read/')[0].replace('/', "ƒ")+'/0/'+chap.getAttribute("href").split('/read/')[1];
+            cap.url = '/read/mw¥'+chap.getAttribute("href").split('/manga/')[1].split('/').join('ƒ');
 
             cap.date = psDate(chap.querySelector('i').innerHTML);
 
@@ -67,11 +67,11 @@ var MangaCover = (function() {
         return data;
     }
 
-    methods.chapter = async function(manga, id) {
+    methods.chapter = async function(chid) {
 
         var data = [];
 
-        var page = await got('https://www.mangaworld.cc/manga/'+manga+'/read/'+id);
+        var page = await got('https://www.mangaworld.cc/manga/'+chid);
 
         var json = JSON.parse(page.body.split('$MC=(window.$MC||[]).concat(')[1].split(')</script>')[0]);
 
@@ -90,8 +90,6 @@ var MangaCover = (function() {
             d.url = baseurl+"/"+page;
             data.push(d);
         });
-
-        console.log(data);
 
         return data;
     }
@@ -156,4 +154,4 @@ function psDate(input) {
     return parts[2]+"."+mese+"."+parts[0];
 }
 
-module.exports = MangaCover;
+module.exports = Provider;

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const apicache = require('apicache');
 const mangaworld = require('../sources/mangaworld');
+const juinjutsu = require('../sources/juinjutsu');
 
 var cache = apicache.middleware;
 
@@ -14,6 +15,8 @@ router.all('/:id', cache("5 minutes"), async (req, res, next) => {try {
   var id = req.params.id.split("¥")[1];
   if(req.params.id.startsWith("mw¥")) {
     data = await mangaworld.manga(id);
+  } else if(req.params.id.startsWith("jj¥")) {
+    data = await juinjutsu.manga(id);
   } else {
     res.status(404).json({});
     return;
