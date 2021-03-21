@@ -66,7 +66,7 @@ var Provider = (function() {
                 var ch = {}
                 ch.title = rawch.querySelector("a").text;
                 ch.url = "/read/jj¥"+rawch.querySelector("a").getAttribute("href").split("read/")[1].split('/').join('ƒ');
-                ch.date = "";
+                ch.date = psDate(rawch.querySelector(".meta_r").text);
                 volume.chapters.push(ch);
             });
 
@@ -86,5 +86,21 @@ var Provider = (function() {
   
     return methods;
 })();
+
+function psDate(date) {
+    switch (date) {
+        case "Oggi":
+            var now = new Date();
+
+            return now.getFullYear()+"."+("0"+(now.getMonth()+1)).slice(-2)+"."+now.getDate();
+            break;
+        case "Ieri":
+            var now = new Date();
+            return now.getFullYear()+"."+("0"+(now.getMonth()+1)).slice(-2)+"."+(now.getDate()-1);
+            break;
+        default:
+            return date;
+    }
+}
 
 module.exports = Provider;
