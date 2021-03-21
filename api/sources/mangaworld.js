@@ -90,7 +90,7 @@ var Provider = (function() {
             d.url = baseurl+"/"+page;
             data.push(d);
         });
-
+        
         return data;
     }
   

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mangaworld = require('../sources/mangaworld');
 const juinjutsu = require('../sources/juinjutsu');
+const ccm = require('../sources/ccm');
 
 router.post('/', async (req, res, next) => {try {
 
@@ -22,9 +23,14 @@ router.post('/', async (req, res, next) => {try {
       data = data.concat(await juinjutsu.search(req.body.search.substring(3).trim()));
 
 
+    } else if(req.body.search.toLowerCase().startsWith("ccm:")) {
+      data = data.concat(await ccm.search(req.body.search.substring(4).trim()));
+
+
     } else {
       data = data.concat(await mangaworld.search(req.body.search));
       data = data.concat(await juinjutsu.search(req.body.search));
+      data = data.concat(await ccm.search(req.body.search));
     }
   }
 
