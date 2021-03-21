@@ -57,7 +57,8 @@ var Provider = (function() {
         var volumes = [];
         rawvolumes.forEach(el => {
             volume = {};
-            volume.index = el.querySelector(".volume_comic").text.includes("VOLUME") ? parseInt(el.querySelector(".volume_comic").text.includes("VOLUME").substring(7)) : 0;
+            volume.index = el.querySelector(".volume_comic").text.includes("Volume") ? parseInt(el.querySelector(".volume_comic").text.substring(7)) : 0;
+            console.log(el.querySelector(".volume_comic").text);
 
             var rawchs = el.querySelectorAll(".element");
 
