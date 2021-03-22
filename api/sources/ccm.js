@@ -9,7 +9,7 @@ var Provider = (function() {
             return [];
         }
 
-        var page = await got('https://ccmapi.minettyx.it/mangas');
+        var page = await got('https://api.ccmscans.in/mangas');
         var content = JSON.parse(page.body);
 
         var data = [];
@@ -23,7 +23,7 @@ var Provider = (function() {
     }
 
     methods.manga = async function(id) {
-        var page = await got('https://ccmapi.minettyx.it/manga/'+id);
+        var page = await got('https://api.ccmscans.in/manga/'+id);
         var content = JSON.parse(page.body);
 
         var data = {};
@@ -54,7 +54,7 @@ var Provider = (function() {
     }
 
     methods.chapter = async function(chid) {
-        var page = await got('https://ccmapi.minettyx.it/chapter/'+chid);
+        var page = await got('https://api.ccmscans.in/chapter/'+chid);
         var images = JSON.parse(page.body).images;
         
         var data = [];
