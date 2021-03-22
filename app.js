@@ -6,7 +6,6 @@ const bodyParser = require('body-parser');
 const searchRoute = require('./api/routes/search');
 const mangaDetailsRoute = require('./api/routes/mangaDetails');
 const readRoute = require('./api/routes/read');
-const redirect = require('./api/routes/redirect');
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: false}));
@@ -26,7 +25,6 @@ app.use((req, res, next) => {
 app.use('/search', searchRoute);
 app.use('/series', mangaDetailsRoute);
 app.use('/read', readRoute);
-app.use('/redirect', redirect);
 
 
 //ERROR handling
