@@ -59,7 +59,7 @@ var Provider = (function() {
         
         var data = [];
         images.forEach(img => {
-            data.push({url: '/redirect/'+encodeURIComponent(img)});
+            data.push({url: img});
         });
 
         return data;
