@@ -7,7 +7,7 @@ var Provider = (function() {
     methods.search = async function(query) {
 
         var data = [];
-        var page = await got('https://www.mangaworld.cc/archive?keyword='+query);
+        var page = await got('https://www.mangaworld.io/archive?keyword='+query);
         const parsed = htmlParser.parse(page.body);
 
         var entrys = parsed.querySelectorAll('.entry');
@@ -27,7 +27,7 @@ var Provider = (function() {
     methods.manga = async function(id) {
 
         var data = [];
-        var page = await got('https://www.mangaworld.cc/manga/'+id);
+        var page = await got('https://www.mangaworld.io/manga/'+id);
         const parsed = htmlParser.parse(page.body);
 
         data.synopsis = parsed.querySelector('#noidungm').innerHTML;
@@ -71,7 +71,7 @@ var Provider = (function() {
 
         var data = [];
 
-        var page = await got('https://www.mangaworld.cc/manga/'+chid);
+        var page = await got('https://www.mangaworld.io/manga/'+chid);
 
         var json = JSON.parse(page.body.split('$MC=(window.$MC||[]).concat(')[1].split(')</script>')[0]);
 
