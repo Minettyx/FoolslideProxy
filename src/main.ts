@@ -56,7 +56,7 @@ router.post('/series/:id', (req, res, next) => {
     if(mod.id === modid) {
       mod.manga(mangaid).then((data) => {
 
-        let response = `<html><head></head><body><div id="wrapper"><article id="content"><div class="panel"><div class="comic info"><div class="thumbnail"><img src="${data.img}" /></div><div class="large comic"><h1 class="title"></h1><div class="info"><b>Author</b>: ${data.author}<br><b>Artist</b>: ${data.artist}<br><b>Synopsis</b>: [${mod.name}] ${data.synopsis}</div></div></div><div class="list"><div class="group"><div class="title">Volume</div>`
+        let response = `<html><head></head><body><div id="wrapper"><article id="content"><div class="panel"><div class="comic info"><div class="thumbnail"><img src="${data.img}" /></div><div class="large comic"><h1 class="title"></h1><div class="info"><b>Author</b>: ${authorartist(data.author, data.artist)}<br><b>Artist</b>: ${mod.name}<br><b>Synopsis</b>: ${data.synopsis}</div></div></div><div class="list"><div class="group"><div class="title">Volume</div>`
 
         data.chapters.forEach(chapter => {
           response += `<div class="element"><div class="title"><a href="/read/${mod.id}-${btoa(mangaid)}-${btoa(chapter.id)}" title="${chapter.title}">${chapter.title}</a></div><div class="meta_r">by <a href="" title="" ></a>, ${chapter.date.getFullYear()}.${("0"+(chapter.date.getMonth()+1)).slice(-2)}.${chapter.date.getDate()}</div></div>`
@@ -117,4 +117,22 @@ function atob(hex: string) {
 
 function btoa(string: string) {
   return Buffer.from(string).toString('hex')
+}
+
+function authorartist(author: string, artist: string): string {
+  let names = []
+  if(author !== '') names.push(author)
+  if(artist !== '') names.push(artist)
+
+  if(names.length > 1) {
+    if(names[0] === names[1]) {
+      return names[0]
+    } else {
+      return names[0]+', '+names[1]
+    }
+  } else if(names.length === 1) {
+    return names[0]
+  }
+
+  return ''
 }
