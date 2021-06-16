@@ -3,7 +3,7 @@ import apicache, { id } from 'apicache'
 import Module from './classes/Module'
 const router = express.Router()
 
-import ccm from './modules/ccm'
+import ccm from './modules/ccm/ccm'
 import mangaworld from './modules/mangaworld'
 import juinjutsu from './modules/juinjutsu'
 
@@ -17,7 +17,6 @@ const modules: Module[] = [
   mangaworld,
   juinjutsu
 ]
-
 
 
 
