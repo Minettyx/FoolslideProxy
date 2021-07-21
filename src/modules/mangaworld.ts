@@ -107,51 +107,51 @@ function psDate(input: string) {
 
   switch (parts[1]) {
       case "Gennaio":
-          mese = 1;
+          mese = 0;
           break;
   
       case "Febbraio":
-          mese = 2;
+          mese = 1;
           break;
 
       case "Marzo":
-          mese = 3;
+          mese = 2;
           break;
 
       case "Aprile":
-          mese = 4;
+          mese = 3;
           break;
 
       case "Maggio":
-          mese = 5;
+          mese = 4;
           break;
   
       case "Giugno":
-          mese = 6;
+          mese = 5;
           break;
 
       case "Luglio":
-          mese = 7;
+          mese = 6;
           break;
 
       case "Agosto":
-          mese = 8;
+          mese = 7;
           break;
 
       case "Settembre":
-          mese = 9;
+          mese = 8;
           break;
   
       case "Ottoble":
-          mese = 10;
+          mese = 9;
           break;
 
       case "Novembre":
-          mese = 11;
+          mese = 10;
           break;
 
       case "Dicembre":
-          mese = 12;
+          mese = 11;
           break;
   }
 
