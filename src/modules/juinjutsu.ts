@@ -106,7 +106,7 @@ function psDate(date: string): Date {
       let dt = new Date()
       const p = date.split('.')
       dt.setFullYear(parseInt(p[0]))
-      dt.setMonth(parseInt(p[1]))
+      dt.setMonth(parseInt(p[1])-1)
       dt.setDate(parseInt(p[2]))
       return dt;
 }
