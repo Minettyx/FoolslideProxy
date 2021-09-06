@@ -6,6 +6,7 @@ const router = express.Router()
 import ccm from './modules/ccm/ccm'
 import mangaworld from './modules/mangaworld'
 import juinjutsu from './modules/juinjutsu'
+import onepiecepower from './modules/onepiecepower'
 
 const cache = apicache.middleware;
 
@@ -15,7 +16,8 @@ const cache = apicache.middleware;
 const modules: Module[] = [
   ccm,
   mangaworld,
-  juinjutsu
+  juinjutsu,
+  onepiecepower
 ]
 
 
