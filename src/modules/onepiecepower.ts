@@ -111,8 +111,6 @@ class Juinjutsu implements Module {
         }
       }
 
-      size++
-
       /** return results */
 
       let res: string[] = []
