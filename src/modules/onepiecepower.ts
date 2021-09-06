@@ -74,18 +74,50 @@ class Juinjutsu implements Module {
       const url = new URL(id, 'http://onepiecepower.info/manga/'+manga).href
       const html = (await axios.get(url)).data
 
+      const baseUrl = await this.pageBaseUrl(html, manga, id)
+
+      /** calculate oversize */
+
       let oversize = 15
       while (true) {
-        if(await this.pageExist(html, manga, id, oversize)) {
+        if(await this.pageExist(baseUrl, oversize+1)) {
           oversize *= 2
         } else {
           break
         }
       }
 
+      /** bynary search */
+
+      let start = 1;
+      let end = oversize;
+      let size = oversize
+
+      while (start <= end) {
+        let middle = Math.floor((start + end) / 2);
+  
+        if (await this.pageExist(baseUrl, middle)) {
+          if(end-start <= 1) {
+            size = middle
+            break
+          }
+          start = middle + 1
+        } else {
+          if(end-start <= 1) {
+            size = middle-1
+            break
+          }
+          end = middle - 1
+        }
+      }
+
+      size++
+
+      /** return results */
+
       let res: string[] = []
-      for (let i = 1; i <= oversize; i++) {
-        res.push(this.pageUrl(html, manga, id, i))
+      for (let i = 1; i <= size; i++) {
+        res.push(this.pageUrl(baseUrl, i))
       }
 
       resolve(res)
@@ -93,16 +125,54 @@ class Juinjutsu implements Module {
     })
   }
 
-  private pageUrl(html: string, manga: string, chapter: string, page: number) {
-    let url = new URL(chapter, 'http://onepiecepower.info/manga/'+manga).href
-    let link = ''
-    let vol = html.split('var vol = "')[1].split('"')[0]
-    let cap = chapter.split('/')[1]+'/'
+  private pageBaseUrl(html: string, manga: string, chapter: string) {
+    return new Promise<string>((resolve) => {
+      let url = new URL(chapter, 'http://onepiecepower.info/manga/'+manga).href
+      // let link = ''
+      // let vol = html.split('var vol = "')[1].split('"')[0]
+      // let cap = chapter.split('/')[1]+'/'
+  
+      // link=url.split('reader/')[0].concat(vol);
+      // link=link.concat(cap);
+  
+      let code =
+        (
+          html.split('<script type="text/javascript">').pop() || ''
+        )
+        .split('link=link.concat(".jpg")')[0]
+        .split('\n')
+        .filter(v => 
+          !(
+            v.trim().startsWith('$') ||
+            v.trim().startsWith('if') ||
+            v.trim().startsWith('}') ||
+            v.includes('XMLHttpRequest')
+          )
+        )
+        .join('\n')
+        .split('window.location.href')
+        .join("'"+addslashes(url)+"'")
+        .split('location.pathname')
+        .join("'"+addslashes(new URL(url).pathname)+"'")
+        .split('location.search')
+        .join("''")
+  
+      code = code.concat('\nconsole.log(link);')
 
-    link=url.split('reader/')[0].concat(vol);
-    link=link.concat(cap);
+      const SandBox = require("sandbox")
+      const s = new SandBox()
+      s.run(code, (o: {result: string; console: string[]}) => {
+
+        const res = new URL('./', (o.console[0]+'')).href
+        resolve(res)
+      })
+    })
+  }
+
+  private pageUrl(baseurl: string, page: number) {
+    let link = baseurl
     if(page<10){
-        link=link.concat("0");
+      link=link.concat("0");
     }
     link=link.concat(page+'');
     link=link.concat(".jpg");
@@ -110,11 +180,11 @@ class Juinjutsu implements Module {
     return link
   }
 
-  private async pageExist(html: string, manga: string, chapter: string, page: number) {
+  private async pageExist(baseurl: string, page: number) {
     return (
       (
         await axios.get(
-          this.pageUrl(html, manga, chapter, page),
+          this.pageUrl(baseurl, page),
           {validateStatus: () => true}
         )
       ).status === 200
@@ -124,3 +194,7 @@ class Juinjutsu implements Module {
 }
 
 export default new Juinjutsu()
+
+function addslashes( str: string ) {
+  return (str + '').replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0');
+}

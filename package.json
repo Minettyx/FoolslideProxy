@@ -19,6 +19,7 @@
     "graphql": "^15.5.0",
     "isomorphic-unfetch": "^3.1.0",
     "morgan": "^1.10.0",
+    "sandbox": "^0.8.6",
     "ts-node": "^9.1.1"
   },
   "devDependencies": {
