@@ -10,7 +10,7 @@ class Mangaworld implements Module {
   search(query: string) {
     return new Promise(async (resolve: (value: SearchResult[]) => void) => {
 
-      const $ = cheerio.load((await axios.get(`https://www.mangaworld.io/archive?keyword=${query}`)).data)
+      const $ = cheerio.load((await axios.get(`https://www.mangaworld.in/archive?keyword=${query}`)).data)
 
       let results: SearchResult[] = []
       $('.entry').each((i, el) => {
@@ -37,10 +37,10 @@ class Mangaworld implements Module {
         artist: '',
         img: '',
         chapters: chapters,
-        sourceurl: 'https://www.mangaworld.io/manga/'+mangaid
+        sourceurl: 'https://www.mangaworld.in/manga/'+mangaid
       }
 
-      const $ = cheerio.load((await axios.get(`https://www.mangaworld.io/manga/${mangaid}`)).data)
+      const $ = cheerio.load((await axios.get(`https://www.mangaworld.in/manga/${mangaid}`)).data)
 
       data.synopsis = $('#noidungm').text()
 
@@ -80,7 +80,7 @@ class Mangaworld implements Module {
 
       let result: string[] = []
       
-      const body = (await axios.get(`https://www.mangaworld.io/manga/${manga}/read/${id}`)).data
+      const body = (await axios.get(`https://www.mangaworld.in/manga/${manga}/read/${id}`)).data
       const json = JSON.parse(body.split('$MC=(window.$MC||[]).concat(')[1].split(')</script>')[0]);
       const pages: string[] = json.o.w[0][2].chapter.pages
       const $ = cheerio.load(body)

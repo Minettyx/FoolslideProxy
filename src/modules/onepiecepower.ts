@@ -126,12 +126,6 @@ class Juinjutsu implements Module {
   private pageBaseUrl(html: string, manga: string, chapter: string) {
     return new Promise<string>((resolve) => {
       let url = new URL(chapter, 'http://onepiecepower.info/manga/'+manga).href
-      // let link = ''
-      // let vol = html.split('var vol = "')[1].split('"')[0]
-      // let cap = chapter.split('/')[1]+'/'
-  
-      // link=url.split('reader/')[0].concat(vol);
-      // link=link.concat(cap);
   
       let code =
         (
