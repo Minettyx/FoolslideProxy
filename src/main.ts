@@ -3,6 +3,8 @@ import apicache, { id } from 'apicache'
 import Module from './classes/Module'
 const router = express.Router()
 
+import internal from './modules/internal'
+
 import ccm from './modules/ccm/ccm'
 import mangaworld from './modules/mangaworld'
 import juinjutsu from './modules/juinjutsu'
@@ -14,6 +16,7 @@ const cache = apicache.middleware;
 
 /** Initialize Modules */
 const modules: Module[] = [
+  internal,
   ccm,
   mangaworld,
   juinjutsu,
@@ -23,28 +26,39 @@ const modules: Module[] = [
 
 
 
-router.post('/search', (req, res, next) => {
-  let response = "";
-  let c = 0
-
-  modules.forEach(async (mod) => {
-
-    const search = req.body.search ? req.body.search as string : ''
-
-    if(!search.includes(':') || search.toLowerCase().startsWith(mod.id)) {
-      const query = search.includes(':') ? search.split(mod.id)[1].substring(1).trim() : search
-      const data = await mod.search(query)
-
-      data.forEach(ele => {
-        response += `<div class="group"><div class="title"><a href="/series/${mod.id}-${btoa(ele.id)}" title="${ele.title}">${ele.title}</a></div></div>`
-      })
-
-      c++ ;if(c === modules.length) res.send(response)
-    } else {
-      c++ ;if(c === modules.length) res.send(response)
+router.post('/search', async (req, res, next) => {
+  let response = ''
+  const search = (req.body.search+'').toLowerCase().trim()
+  
+  // check if the search is general or specific
+  const specific = (() => {
+    for (const mod of modules) {
+      if(search.startsWith(mod.id.toLowerCase()+':')) {
+        return mod
+      }
     }
-    
-  })
+    return false
+  })()
+
+  if(specific) {
+    const query = search.split(specific.id.toLowerCase())[1].substring(1).trim()
+    const data = await specific.search(query)
+
+    for(const ele of data) {
+      response += `<div class="group"><div class="title"><a href="/series/${specific.id}-${btoa(ele.id)}" title="${ele.title}">${ele.title}</a></div></div>`
+    }
+  } else {
+    for (const mod of modules) {
+      const data = await mod.search(search)
+
+      for(const ele of data) {
+        response += `<div class="group"><div class="title"><a href="/series/${mod.id}-${btoa(ele.id)}" title="${ele.title}">${ele.title}</a></div></div>`
+      }
+    }
+  }
+
+  res.send(response)
+  return
 
 })
 
@@ -104,12 +118,12 @@ router.post('/read/:id', (req, res, next) => {
 
 })
 
-router.get('/directory/1/', (req, res, next) => {
-  res.send(`<div class="group"><div class="title"><a href="/series/" title="">Latest feed not supported</a></div></div>`)
+router.get('/directory/1/', (_, res, next) => {
+  res.send(`<div class="group"><div class="title"><a href="/series/internal-${btoa('supportedsources')}" title="">Supported sources</a></div></div>`)
 })
 
 
-export = router
+export default router
 
 
 function atob(hex: string) {

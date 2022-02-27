@@ -2,6 +2,7 @@ import { SearchResult, Manga, Chapter } from '../classes/interfaces'
 import Module from '../classes/Module'
 import axios from 'axios'
 import cheerio from 'cheerio'
+import { NodeVM } from 'vm2'
 
 class Juinjutsu implements Module {
   id = 'opp'
@@ -149,15 +150,12 @@ class Juinjutsu implements Module {
         .split('location.search')
         .join("''")
   
-      code = code.concat('\nconsole.log(link);')
+      code = code.concat('\nmodule.exports = link;')
 
-      const SandBox = require("sandbox")
-      const s = new SandBox()
-      s.run(code, (o: {result: string; console: string[]}) => {
-
-        const res = new URL('./', (o.console[0]+'')).href
-        resolve(res)
-      })
+      const s = new NodeVM()
+      const res = new URL('./', (s.run(code)+'')).href
+      console.log(res)
+      resolve(res)
     })
   }
 
