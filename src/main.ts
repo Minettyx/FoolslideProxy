@@ -9,6 +9,7 @@ import ccm from './modules/ccm/ccm'
 import mangaworld from './modules/mangaworld'
 import juinjutsu from './modules/juinjutsu'
 import onepiecepower from './modules/onepiecepower'
+import tuttoanimemanga from './modules/tuttoanimemanga'
 
 const cache = apicache.middleware;
 
@@ -20,7 +21,8 @@ const modules: Module[] = [
   ccm,
   mangaworld,
   juinjutsu,
-  onepiecepower
+  onepiecepower,
+  tuttoanimemanga
 ]
 
 

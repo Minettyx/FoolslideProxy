@@ -154,7 +154,7 @@ class Juinjutsu implements Module {
 
       const s = new NodeVM()
       const res = new URL('./', (s.run(code)+'')).href
-      console.log(res)
+      // console.log(res)
       resolve(res)
     })
   }

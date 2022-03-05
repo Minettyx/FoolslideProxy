@@ -22,7 +22,7 @@ class CCM implements Module {
           }
         }
       `, { title: query }).toPromise().then((response: OperationResult<Query, { title: string; }>) => {
-        console.log(response.data?.mangas)
+        // console.log(response.data?.mangas)
         let result: SearchResult[] = [];
 
         response.data?.mangas.forEach((el) => {
