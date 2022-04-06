@@ -4,7 +4,7 @@ import axios from 'axios'
 import cheerio from 'cheerio'
 import { NodeVM } from 'vm2'
 
-class Juinjutsu implements Module {
+class Onepiecepower implements Module {
   id = 'opp'
   name = 'One Piece Power'
 
@@ -34,7 +34,7 @@ class Juinjutsu implements Module {
       const parsed = cheerio.load(page.data)
 
       const chapters: Chapter[] = []
-      await Promise.all(parsed('body > table > tbody > tr:last-child > td').find('a').each((i, e) => {
+      await Promise.all(parsed('body > table > tbody > tr:nth-child(5) > td').find('a').each((i, e) => {
         const el = cheerio(e)
         chapters.push({
           title: el.text(),
@@ -183,7 +183,7 @@ class Juinjutsu implements Module {
 
 }
 
-export default new Juinjutsu()
+export default new Onepiecepower()
 
 function addslashes( str: string ) {
   return (str + '').replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0');
