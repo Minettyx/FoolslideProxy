@@ -36,6 +36,7 @@ class Onepiecepower implements Module {
       const chapters: Chapter[] = []
       await Promise.all(parsed('body > table > tbody > tr:nth-child(5) > td').find('a').each((i, e) => {
         const el = cheerio(e)
+        if(el.text().includes('(Disponibile dal')) return
         chapters.push({
           title: el.text(),
           id: el.attr('href')+'',
