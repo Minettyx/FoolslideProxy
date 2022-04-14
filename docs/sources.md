@@ -4,4 +4,4 @@
 * [MangaWorld](https://www.mangaworld.in/) (mw)
 * [One Piece Power](http://onepiecepower.info/) (opp)
 * [Tutto Anime Manga](https://tuttoanimemanga.net/) (tam)
-* [MangaReader](https://mangareader.to/) (mr: [language])
+* [MangaReader](https://mangareader.to/) (mr)
