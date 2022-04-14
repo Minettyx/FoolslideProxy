@@ -2,7 +2,7 @@ import { SearchResult, Manga } from "../classes/interfaces"
 import Module from "../classes/Module"
 import axios from 'axios'
 
-class TuttoAnimeManga implements Module {
+class TuttoAnimeManga extends Module {
   id = 'tam'
   name = 'TuttoAnimeManga'
 

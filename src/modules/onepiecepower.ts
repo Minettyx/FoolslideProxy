@@ -1,21 +1,21 @@
 import { SearchResult, Manga, Chapter } from '../classes/interfaces'
 import Module from '../classes/Module'
 import axios from 'axios'
-import cheerio from 'cheerio'
+import {load as cheerioload} from 'cheerio'
 import { NodeVM } from 'vm2'
 
-class Onepiecepower implements Module {
+class Onepiecepower extends Module {
   id = 'opp'
   name = 'One Piece Power'
 
   search(query: string) {
     return new Promise(async (resolve: (value: SearchResult[]) => void) => {
       const page = await axios.get('http://onepiecepower.info/manga/lista-manga')
-      const parsed = cheerio.load(page.data)
+      const parsed = cheerioload(page.data)
 
       const res: SearchResult[] = []
       await Promise.all(parsed('body > table > tbody > tr > td').find('a').each((i, e) => {
-        const el = cheerio(e)
+        const el = parsed(e)
         if(el.text().toLowerCase().includes(query.toLowerCase())) {
           res.push({
             id: el.attr('href')+'',
@@ -31,11 +31,11 @@ class Onepiecepower implements Module {
   manga(mangaid: string) {
     return new Promise(async (resolve: (value: Manga) => void) => {
       const page = await axios.get('http://onepiecepower.info/manga/'+mangaid)
-      const parsed = cheerio.load(page.data)
+      const parsed = cheerioload(page.data)
 
       const chapters: Chapter[] = []
       await Promise.all(parsed('body > table > tbody > tr:nth-child(5) > td').find('a').each((i, e) => {
-        const el = cheerio(e)
+        const el = parsed(e)
         if(el.text().includes('(Disponibile dal')) return
         chapters.push({
           title: el.text(),

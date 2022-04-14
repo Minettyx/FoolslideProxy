@@ -8,7 +8,7 @@ const client = createClient({
   url: 'https://api.ccmscans.in/graphql',
 });
 
-class CCM implements Module {
+class CCM extends Module {
   id = 'ccm'
   name = 'CCM Translations'
 

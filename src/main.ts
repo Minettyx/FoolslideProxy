@@ -1,6 +1,6 @@
 import express from 'express'
 import apicache, { id } from 'apicache'
-import Module from './classes/Module'
+import Module, { ModuleFlags } from './classes/Module'
 const router = express.Router()
 
 import internal from './modules/internal'
@@ -10,19 +10,21 @@ import mangaworld from './modules/mangaworld'
 import juinjutsu from './modules/juinjutsu'
 import onepiecepower from './modules/onepiecepower'
 import tuttoanimemanga from './modules/tuttoanimemanga'
+import mangareader from './modules/mangareader/mangareader'
 
 const cache = apicache.middleware;
 
 
 
 /** Initialize Modules */
-const modules: Module[] = [
+export const modules: ReadonlyArray<Module> = [
   internal,
   ccm,
   mangaworld,
   juinjutsu,
   onepiecepower,
-  tuttoanimemanga
+  tuttoanimemanga,
+  mangareader
 ]
 
 
@@ -51,6 +53,8 @@ router.post('/search', async (req, res, next) => {
     }
   } else {
     for (const mod of modules) {
+      if(mod.flags.includes(ModuleFlags.DISABLE_GLOBAL_SEARCH)) continue
+
       const data = await mod.search(search)
 
       for(const ele of data) {
@@ -64,64 +68,80 @@ router.post('/search', async (req, res, next) => {
 
 })
 
-router.post('/series/:id', (req, res, next) => {
+router.post('/series/:id', async (req, res, next) => {
 
   const modid = req.params.id.split("-")[0]
   const mangaid = atob(req.params.id.split("-")[1]+'')
 
-  modules.forEach(async (mod) => {
+  for(const mod of modules) {
     if(mod.id === modid) {
-      mod.manga(mangaid).then((data) => {
+      const data = await mod.manga(mangaid)
 
-        let response = `<html><head></head><body><div id="wrapper"><article id="content"><div class="panel"><div class="comic info"><div class="thumbnail"><img src="${data.img}" /></div><div class="large comic"><h1 class="title"></h1><div class="info"><b>Author</b>: ${authorartist(data.author, data.artist)}<br><b>Artist</b>: ${mod.name}<br><b>Synopsis</b>: ${data.synopsis}</div></div></div><div class="list"><div class="group"><div class="title">Volume</div>`
+      let response = `<html><head></head><body><div id="wrapper"><article id="content"><div class="panel"><div class="comic info"><div class="thumbnail"><img src="${data.img}" /></div><div class="large comic"><h1 class="title"></h1><div class="info"><b>Author</b>: ${authorartist(data.author, data.artist)}<br><b>Artist</b>: ${mod.name}<br><b>Synopsis</b>: ${data.synopsis}</div></div></div><div class="list"><div class="group"><div class="title">Volume</div>`
 
-        data.chapters.forEach(chapter => {
-          response += `<div class="element"><div class="title"><a href="/read/${mod.id}-${btoa(mangaid)}-${btoa(chapter.id)}" title="${chapter.title}">${chapter.title}</a></div><div class="meta_r">by <a href="" title="" ></a>, ${chapter.date.getFullYear()}.${("0"+(chapter.date.getMonth()+1)).slice(-2)}.${chapter.date.getDate()}</div></div>`
-        })
-          
-        response += `</div></div></div></article></div></body></html>`
-        res.send(response)
+      data.chapters.forEach(chapter => {
+        response += `<div class="element"><div class="title"><a href="/read/${mod.id}-${btoa(mangaid)}-${btoa(chapter.id)}" title="${chapter.title}">${chapter.title}</a></div><div class="meta_r">by <a href="" title="" ></a>, ${chapter.date.getFullYear()}.${("0"+(chapter.date.getMonth()+1)).slice(-2)}.${chapter.date.getDate()}</div></div>`
       })
+        
+      response += `</div></div></div></article></div></body></html>`
+      res.send(response)
+      return
     }
-  })
+  }
 })
 
-router.get('/series/:id', (req, res, next) => {
+router.get('/series/:id', async (req, res, next) => {
   const modid = req.params.id.split("-")[0]
   const mangaid = atob(req.params.id.split("-")[1]+'')
 
-  modules.forEach(async (mod) => {
+  for(const mod of modules) {
     if(mod.id === modid) {
-      mod.manga(mangaid).then((data) => {
-        res.redirect(data.sourceurl)
-      })
+      const data = await mod.manga(mangaid)
+      res.redirect(data.sourceurl)
+      return
     }
-  })
+  }
 })
 
-router.post('/read/:id', (req, res, next) => {
+router.post('/read/:id', async (req, res, next) => {
 
   const modid = req.params.id.split("-")[0]
   const mangaid = atob(req.params.id.split("-")[1]+'')
   const id = atob(req.params.id.split("-")[2]+'')
 
-  modules.forEach(async (mod) => {
+  for(const mod of modules) {
     if(mod.id === modid) {
-      mod.chapter(mangaid, id).then((images) => {
-        let data: {url: string}[] = []
-        images.forEach(img => {
-          data.push({url: img});
-        });
+      const images = await mod.chapter(mangaid, id)
 
-        res.send("var pages = "+JSON.stringify(data)+";");
-      })
+      const data: {url: string}[] = images.map(v => ({url: v}))
+
+      res.send("<script>var pages = "+JSON.stringify(data)+";</script>");
+      return
     }
-  })
+  }
 
 })
 
 router.get('/directory/1/', (_, res, next) => {
   res.send(`<div class="group"><div class="title"><a href="/series/internal-${btoa('supportedsources')}" title="">Supported sources</a></div></div>`)
+})
+
+router.get('/image/:id', async (req, res, next) => {
+  const modid = req.params.id.split("-")[0]
+  const mangaid = atob(req.params.id.split("-")[1]+'')
+  const chapterid = atob(req.params.id.split("-")[2]+'')
+  const imageid = atob(req.params.id.split("-")[3]+'')
+
+  for(const mod of modules) {
+    if(mod.id === modid && mod.image) {
+      const buffer = await mod.image(mangaid, chapterid, imageid)
+
+      res.contentType('image/jpeg');
+      res.send(buffer)
+      res.end()
+      return
+    }
+  }
 })
 
 

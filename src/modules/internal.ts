@@ -1,9 +1,14 @@
 import { SearchResult, Manga, Chapter } from '../classes/interfaces'
-import Module from '../classes/Module'
+import Module, { ModuleFlags } from '../classes/Module'
+import { modules } from '../main'
 
-class Internal implements Module {
+class Internal extends Module {
   id: string = 'internal'
   name: string = 'Internal'
+  flags: ModuleFlags[] = [
+    ModuleFlags.HIDDEN,
+    ModuleFlags.DISABLE_GLOBAL_SEARCH
+  ]
 
   search(_: string): Promise<SearchResult[]> {
     return new Promise(resolve => {
@@ -15,18 +20,27 @@ class Internal implements Module {
     return new Promise(resolve => {
       if(id === 'supportedsources') {
 
-        let syn = 'Click on WebView above';
+        let syn = 'Click on WebView for more infos';
+
+        let list = []
+        for(const mod of modules.slice().reverse()) {
+          if(mod.flags.includes(ModuleFlags.HIDDEN)) continue
+
+          let title = `${mod.name} (${mod.id})`
+
+          list.push({
+            title,
+            id: mod.id,
+            date: new Date(0)
+          })
+        }
 
         const manga: Manga = {
           synopsis: syn,
           author: 'Minettyx',
           artist: '',
           img: '',
-          chapters: [{
-            title: 'Click on WebView above',
-            id: '',
-            date: new Date('27/02/2022')
-          }],
+          chapters: list,
           sourceurl: 'https://github.com/Minettyx/FoolslideProxy/tree/master/docs/sources.md',
         }
 
@@ -38,7 +52,7 @@ class Internal implements Module {
 
   chapter(): Promise<string[]> {
     return new Promise(resolve => {
-      resolve([''])
+      resolve([])
     })
   }
     

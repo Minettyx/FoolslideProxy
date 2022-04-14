@@ -1,16 +1,16 @@
 import { SearchResult, Manga, Chapter } from '../classes/interfaces'
 import Module from '../classes/Module'
 import axios from 'axios'
-import cheerio from 'cheerio'
+import {load as cheerioload} from 'cheerio'
 
-class Mangaworld implements Module {
+class Mangaworld extends Module {
   id = 'mw'
   name = 'MangaWorld'
 
   search(query: string) {
     return new Promise(async (resolve: (value: SearchResult[]) => void) => {
 
-      const $ = cheerio.load((await axios.get(`https://www.mangaworld.in/archive?keyword=${query}`)).data)
+      const $ = cheerioload((await axios.get(`https://www.mangaworld.in/archive?keyword=${query}`)).data)
 
       let results: SearchResult[] = []
       $('.entry').each((i, el) => {
@@ -40,7 +40,7 @@ class Mangaworld implements Module {
         sourceurl: 'https://www.mangaworld.in/manga/'+mangaid
       }
 
-      const $ = cheerio.load((await axios.get(`https://www.mangaworld.in/manga/${mangaid}`)).data)
+      const $ = cheerioload((await axios.get(`https://www.mangaworld.in/manga/${mangaid}`)).data)
 
       data.synopsis = $('#noidungm').text()
 
@@ -83,7 +83,7 @@ class Mangaworld implements Module {
       const body = (await axios.get(`https://www.mangaworld.in/manga/${manga}/read/${id}`)).data
       const json = JSON.parse(body.split('$MC=(window.$MC||[]).concat(')[1].split(')</script>')[0]);
       const pages: string[] = json.o.w[0][2].chapter.pages
-      const $ = cheerio.load(body)
+      const $ = cheerioload(body)
 
       const firstimage = $('#page').find('img').attr('src')?.split('/')
       firstimage?.pop()

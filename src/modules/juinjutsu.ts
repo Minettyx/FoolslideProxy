@@ -1,9 +1,9 @@
 import { SearchResult, Manga, Chapter } from '../classes/interfaces'
 import Module from '../classes/Module'
 import axios from 'axios'
-import cheerio from 'cheerio'
+import {load as cheerioload} from 'cheerio'
 
-class Juinjutsu implements Module {
+class Juinjutsu extends Module {
   id = 'jj'
   name = 'JuinJutsu'
 
@@ -15,7 +15,7 @@ class Juinjutsu implements Module {
       }
 
       const page1 = await axios.get('https://juinjutsureader.ovh/directory/1/')
-      const parsed = cheerio.load(page1.data)
+      const parsed = cheerioload(page1.data)
 
       const pages_count = parseInt(parsed(".gbuttonright.btn.btn-primary").attr("href")?.split("directory/")[1].split("/")[0]+'')
 
@@ -28,7 +28,7 @@ class Juinjutsu implements Module {
 
       var chs: {title: string, id: string}[] = []
       pages.forEach(el => {
-        var $ = cheerio.load(el)
+        var $ = cheerioload(el)
         var caps = $(".series_element")
         caps.each((i, capEl) => {
           var cap = {title: '', id: ''}
@@ -52,7 +52,7 @@ class Juinjutsu implements Module {
   manga(mangaid: string) {
     return new Promise(async (resolve: (value: Manga) => void) => {
       var page = await axios.get('https://juinjutsureader.ovh/series/'+mangaid)
-      const $ = cheerio.load(page.data)
+      const $ = cheerioload(page.data)
 
       let chapters: Chapter[] = []
       let data = {img: '', synopsis: '', author: '', artist: '', sourceurl: 'https://juinjutsureader.ovh/series/'+mangaid, chapters: chapters}
