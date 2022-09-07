@@ -1,5 +1,4 @@
 import express from 'express'
-import apicache, { id } from 'apicache'
 import Module, { ModuleFlags } from './classes/Module'
 const router = express.Router()
 
@@ -11,8 +10,6 @@ import juinjutsu from './modules/juinjutsu'
 import onepiecepower from './modules/onepiecepower'
 import tuttoanimemanga from './modules/tuttoanimemanga'
 import mangareader from './modules/mangareader/mangareader'
-
-const cache = apicache.middleware;
 
 
 

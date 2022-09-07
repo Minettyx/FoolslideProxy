@@ -1,96 +1,62 @@
-import { SearchResult, Manga, Chapter } from '../../classes/interfaces'
+import { SearchResult, Manga } from '../../classes/interfaces'
 import Module from '../../classes/Module'
-import { createClient, OperationResult } from '@urql/core'
-import { Query } from './types'
+import axios from 'axios'
+import { Manga as CCMManga, Chapter as CCMChapter } from './types'
 
-import 'isomorphic-unfetch'
-const client = createClient({
-  url: 'https://api.ccmscans.in/graphql',
-});
+const BASEURL = 'https://ccmscans.in/api/'
 
 class CCM extends Module {
   id = 'ccm'
   name = 'CCM Translations'
 
   search(query: string) {
-    return new Promise((resolve: (value: SearchResult[]) => void) => {
-      client.query(`
-        query($title: String!) {
-          mangas(search: $title) {
-            title
-            id
-          }
-        }
-      `, { title: query }).toPromise().then((response: OperationResult<Query, { title: string; }>) => {
-        // console.log(response.data?.mangas)
-        let result: SearchResult[] = [];
+    return new Promise(async (resolve: (value: SearchResult[]) => void) => {
 
-        response.data?.mangas.forEach((el) => {
-          result.push({ id: el.id, title: el.title })
-        })
-        resolve(result)
-      })
+      const data: CCMManga[] = (await (axios.get(BASEURL + 'mangas.json'))).data
+
+      let result: SearchResult[] = [];
+      for (const manga of data) {
+        if(manga.title.toLocaleLowerCase().includes(query.toLocaleLowerCase())) {
+          result.push({
+            id: manga.id,
+            title: manga.title
+          })
+        }
+      }
+      resolve(result)
     })
   }
 
   manga(mangaid: string) {
-    return new Promise((resolve: (value: Manga) => void) => {
-      client.query(`
-        query ($id: String!) {
-          manga(id: $id) {
-            id
-            cover
-            author
-            artist
-            chapters {
-              chapter
-              volume
-              title
-              time
-            }
+    return new Promise(async (resolve: (value: Manga) => void) => {
+
+      const data: CCMManga = (await (axios.get(BASEURL + `manga/${mangaid}.json`))).data
+
+      resolve({
+        synopsis: '',
+        author: data.author,
+        artist: data.artist || '',
+        img: data.cover,
+        chapters: data.chapters.reverse().map(c => {
+          return {
+            title: (c.volume != '' ? 'Vol.' + c.volume + ' ' : '') + 'Ch.' + c.chapter + (c.title != '' ? ' - ' + c.title : ''),
+            id: c.chapter,
+            date: new Date(c.time)
           }
-        }
-      `, { id: mangaid }).toPromise().then((response: OperationResult<Query, { id: string; }>) => {
-        let el = response.data?.manga
-        if (!el) return
-
-        let chapters: Chapter[] = []
-        el.chapters.reverse().forEach((ch) => {
-          chapters.push({ title: (ch.volume != '' ? 'Vol.' + ch.volume + ' ' : '') + 'Ch.' + ch.chapter + (ch.title != '' ? ' - ' + ch.title : ''), id: ch.chapter, date: new Date(parseInt(ch.time)) })
-        });
-
-        resolve({ synopsis: '', author: el.author, artist: el.artist || '', img: el.cover, chapters: chapters, sourceurl: `https://ccmscans.in/manga/${el.id}` })
+        }),
+        sourceurl: `https://ccmscans.in/manga/${data.id}`
       })
     })
   }
 
   chapter(manga: string, id: string) {
-    return new Promise((resolve: (value: string[]) => void) => {
-      client.query(`
-        query($manga: String!, $chapter: String!) {
-          chapter(manga: $manga, chapter: $chapter) {
-            images
-          }
-        }
-      `, {manga, chapter: id}).toPromise().then((response: OperationResult<Query, { manga: string; chapter: string; }>) => {
-        resolve(response.data?.chapter?.images||[])
-      })
+    return new Promise(async (resolve: (value: string[]) => void) => {
+
+      const data: CCMChapter = (await (axios.get(BASEURL + `chapter/${manga}/${id}.json`))).data
+
+      resolve(data.images)
     })
   }
-
-  /*latest() {
-    const promise = new Promise((resolve: (value: SearchResult[]) => void) => {
-      axios.get(`https://api.ccmscans.in/chapters?sort=time&limit=20&grouped=1`).then((response) => {
-        let result: SearchResult[] = [];
-
-        response.data.forEach((el: ccmSearch) => {
-          result.push({ id: el.id, title: el.title})
-        })
-        resolve(result)
-      })
-    })
-    return promise
-  }*/
 }
 
 export default new CCM()
