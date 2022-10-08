@@ -43,6 +43,6 @@ export const POST: RequestHandler = async ({ request }) => {
 	}
 
 	return new Response(response, {
-		headers: { 'content-type': 'text/html' }
+		headers: { 'content-type': 'text/html', "Cache-Control": "max-age=3600, public" }
 	});
 };

@@ -34,7 +34,7 @@ export const POST: RequestHandler = async ({ params }) => {
 			response += `</div></div></div></article></div></body></html>`;
 
 			return new Response(response, {
-				headers: { 'content-type': 'text/html' }
+				headers: { 'content-type': 'text/html', "Cache-Control": "max-age=300, public" }
 			});
 		}
 	}
@@ -53,7 +53,7 @@ export const GET: RequestHandler = async ({ params }) => {
 			const data = await mod.manga(mangaid);
 
 			return new Response('', {
-				headers: { Location: data.sourceurl },
+				headers: { Location: data.sourceurl, "Cache-Control": "max-age=3600, public" },
 				status: 302
 			});
 		}
