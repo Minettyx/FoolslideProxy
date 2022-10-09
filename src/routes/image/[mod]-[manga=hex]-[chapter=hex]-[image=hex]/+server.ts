@@ -13,7 +13,7 @@ export const GET: RequestHandler = async ({ params }) => {
 			const buffer = await mod.image(mangaid, chapterid, imageid);
 
 			return new Response(buffer, {
-				headers: { 'content-type': 'image/jpeg', "Cache-Control": "max-age=3600, public" }
+				headers: { 'content-type': 'image/jpeg', 'Cache-Control': 'max-age=3600, public' }
 			});
 		}
 	}

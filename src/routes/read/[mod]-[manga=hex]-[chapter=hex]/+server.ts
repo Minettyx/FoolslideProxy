@@ -14,7 +14,7 @@ export const POST: RequestHandler = async ({ params }) => {
 			const data: { url: string }[] = images.map((v) => ({ url: v }));
 
 			return new Response('<script>var pages = ' + JSON.stringify(data) + ';</script>', {
-				headers: { 'content-type': 'text/html', "Cache-Control": "max-age=3600, public" }
+				headers: { 'content-type': 'text/html', 'Cache-Control': 'max-age=3600, public' }
 			});
 		}
 	}
