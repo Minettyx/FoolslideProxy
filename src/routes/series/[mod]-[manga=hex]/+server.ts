@@ -11,6 +11,12 @@ export const POST: RequestHandler = async ({ params }) => {
 		if (mod.id === modid) {
 			const data = await mod.manga(mangaid);
 
+			if (!data) {
+				return new Response('404', {
+					status: 404
+				});
+			}
+
 			let response = `<html><head></head><body><div id="wrapper"><article id="content"><div class="panel"><div class="comic info"><div class="thumbnail"><img src="${
 				data.img
 			}" /></div><div class="large comic"><h1 class="title"></h1><div class="info"><b>Author</b>: ${authorartist(
@@ -51,6 +57,12 @@ export const GET: RequestHandler = async ({ params }) => {
 	for (const mod of modules) {
 		if (mod.id === modid) {
 			const data = await mod.manga(mangaid);
+
+			if (!data) {
+				return new Response('404', {
+					status: 404
+				});
+			}
 
 			return new Response('', {
 				headers: { Location: data.sourceurl, 'Cache-Control': 'max-age=3600, public' },

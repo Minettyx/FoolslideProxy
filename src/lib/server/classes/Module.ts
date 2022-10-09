@@ -7,9 +7,9 @@ export default abstract class Module {
 	flags: ModuleFlags[] = [];
 
 	abstract search(query: string, language?: string): Promise<SearchResult[]>;
-	abstract manga(id: string): Promise<Manga>;
-	abstract chapter(manga: string, id: string): Promise<string[]>;
-	public image?(manga: string, chapter: string, id: string): Promise<Buffer>;
+	abstract manga(id: string): Promise<Manga | undefined>;
+	abstract chapter(manga: string, id: string): Promise<string[] | undefined>;
+	public image?(manga: string, chapter: string, id: string): Promise<Buffer | undefined>;
 
 	protected imageProxyUrl(manga: string, chapter: string, id: string): string {
 		return (

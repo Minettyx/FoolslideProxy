@@ -11,6 +11,12 @@ export const POST: RequestHandler = async ({ params }) => {
 		if (mod.id === modid) {
 			const images = await mod.chapter(mangaid, id);
 
+			if (!images) {
+				return new Response('404', {
+					status: 404
+				});
+			}
+
 			const data: { url: string }[] = images.map((v) => ({ url: v }));
 
 			return new Response('<script>var pages = ' + JSON.stringify(data) + ';</script>', {

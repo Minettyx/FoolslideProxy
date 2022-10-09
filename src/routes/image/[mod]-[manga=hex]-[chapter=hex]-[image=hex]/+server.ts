@@ -12,13 +12,19 @@ export const GET: RequestHandler = async ({ params }) => {
 		if (mod.id === modid && mod.image) {
 			const buffer = await mod.image(mangaid, chapterid, imageid);
 
+			if (!buffer) {
+				return new Response('404', {
+					status: 404
+				});
+			}
+
 			return new Response(buffer, {
 				headers: { 'content-type': 'image/jpeg', 'Cache-Control': 'max-age=3600, public' }
 			});
 		}
 	}
 
-	return new Response('', {
+	return new Response('404', {
 		status: 404
 	});
 };
