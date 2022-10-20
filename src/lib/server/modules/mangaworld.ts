@@ -138,7 +138,7 @@ function psDate(input: string) {
 			mese = 8;
 			break;
 
-		case 'Ottoble':
+		case 'Ottobre':
 			mese = 9;
 			break;
 
