@@ -10,7 +10,7 @@ class Onepiecepower extends Module {
 
 	search(query: string) {
 		return new Promise(async (resolve: (value: SearchResult[]) => void) => {
-			const page = await axios.get('http://onepiecepower.info/manga/lista-manga');
+			const page = await axios.get('http://onepiecepower.com/manga/lista-manga');
 			const parsed = cheerioload(page.data);
 
 			const res: SearchResult[] = [];
@@ -34,7 +34,7 @@ class Onepiecepower extends Module {
 
 	manga(mangaid: string) {
 		return new Promise(async (resolve: (value: Manga) => void) => {
-			const page = await axios.get('http://onepiecepower.info/manga/' + mangaid);
+			const page = await axios.get('http://onepiecepower.com/manga/' + mangaid);
 			const parsed = cheerioload(page.data);
 
 			const chapters: Chapter[] = [];
@@ -66,7 +66,7 @@ class Onepiecepower extends Module {
 					}
 				});
 
-			const img = new URL('images/cover.jpg', 'http://onepiecepower.info/manga/' + mangaid).href;
+			const img = new URL('images/cover.jpg', 'http://onepiecepower.com/manga/' + mangaid).href;
 
 			resolve({
 				synopsis: syn,
@@ -74,14 +74,14 @@ class Onepiecepower extends Module {
 				artist: '',
 				img: img,
 				chapters: chapters.reverse(),
-				sourceurl: 'http://onepiecepower.info/manga/' + mangaid
+				sourceurl: 'http://onepiecepower.com/manga/' + mangaid
 			});
 		});
 	}
 
 	chapter(manga: string, id: string) {
 		return new Promise(async (resolve: (value: string[]) => void) => {
-			const url = new URL(id, 'http://onepiecepower.info/manga/' + manga).href;
+			const url = new URL(id, 'http://onepiecepower.com/manga/' + manga).href;
 			const html = (await axios.get(url)).data;
 
 			const baseUrl = await this.pageBaseUrl(html, manga, id);
@@ -134,7 +134,7 @@ class Onepiecepower extends Module {
 
 	private pageBaseUrl(html: string, manga: string, chapter: string) {
 		return new Promise<string>((resolve) => {
-			const url = new URL(chapter, 'http://onepiecepower.info/manga/' + manga).href;
+			const url = new URL(chapter, 'http://onepiecepower.com/manga/' + manga).href;
 
 			let code = (html.split('<script type="text/javascript">').pop() || '')
 				.split('link=link.concat(".jpg")')[0]
