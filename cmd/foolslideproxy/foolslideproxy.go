@@ -1,0 +1,23 @@
+package main
+
+import (
+	"foolslideproxy/pkg/server"
+	"net/http"
+	"os"
+)
+
+func main() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "3333"
+	}
+
+	if os.Getenv("SIGN_TOKEN") == "" {
+		panic("Environment variablle SIGN_TOKEN not found")
+	}
+
+	err := http.ListenAndServe(":"+port, server.Router())
+	if err != nil {
+		panic(err)
+	}
+}
