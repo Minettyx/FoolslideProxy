@@ -1,4 +1,4 @@
-module foolslideproxy
+module github.com/Minettyx/FoolslideProxy
 
 go 1.21.0
 

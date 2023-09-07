@@ -3,7 +3,7 @@ package juinjutsu
 import (
 	"encoding/json"
 	"fmt"
-	"foolslideproxy/pkg/types"
+	"github.com/Minettyx/FoolslideProxy/pkg/types"
 	"io"
 	"net/http"
 	"net/url"

@@ -1,8 +1,8 @@
 package server
 
 import (
-	"foolslideproxy/pkg/modules/local"
-	"foolslideproxy/pkg/server/routes"
+	"github.com/Minettyx/FoolslideProxy/pkg/modules/local"
+	"github.com/Minettyx/FoolslideProxy/pkg/server/routes"
 	"net/http"
 	"time"
 

@@ -2,8 +2,8 @@ package ccm
 
 import (
 	"encoding/json"
-	"foolslideproxy/pkg/types"
-	"foolslideproxy/pkg/utils"
+	"github.com/Minettyx/FoolslideProxy/pkg/types"
+	"github.com/Minettyx/FoolslideProxy/pkg/utils"
 	"io"
 	"net/http"
 	"net/url"

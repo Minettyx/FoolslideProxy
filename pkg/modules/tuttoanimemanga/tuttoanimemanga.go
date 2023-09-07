@@ -1,8 +1,8 @@
 package tuttoanimemanga
 
 import (
-	"foolslideproxy/pkg/types"
-	"foolslideproxy/pkg/utils"
+	"github.com/Minettyx/FoolslideProxy/pkg/types"
+	"github.com/Minettyx/FoolslideProxy/pkg/utils"
 	"net/url"
 	"time"
 )

@@ -1,9 +1,9 @@
 package routes
 
 import (
-	"foolslideproxy/pkg/modules"
-	"foolslideproxy/pkg/server/errors"
-	"foolslideproxy/pkg/server/pathhandler"
+	"github.com/Minettyx/FoolslideProxy/pkg/modules"
+	"github.com/Minettyx/FoolslideProxy/pkg/server/errors"
+	"github.com/Minettyx/FoolslideProxy/pkg/server/pathhandler"
 	"log"
 	"net/http"
 

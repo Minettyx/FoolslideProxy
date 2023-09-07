@@ -1,11 +1,11 @@
 package routes
 
 import (
-	"foolslideproxy/pkg/modules"
-	"foolslideproxy/pkg/server/formatter"
-	"foolslideproxy/pkg/server/pathhandler"
-	"foolslideproxy/pkg/server/transformer"
-	"foolslideproxy/pkg/types"
+	"github.com/Minettyx/FoolslideProxy/pkg/modules"
+	"github.com/Minettyx/FoolslideProxy/pkg/server/formatter"
+	"github.com/Minettyx/FoolslideProxy/pkg/server/pathhandler"
+	"github.com/Minettyx/FoolslideProxy/pkg/server/transformer"
+	"github.com/Minettyx/FoolslideProxy/pkg/types"
 	"io"
 	"log"
 	"net/http"

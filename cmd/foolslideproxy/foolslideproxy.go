@@ -1,7 +1,7 @@
 package main
 
 import (
-	"foolslideproxy/pkg/server"
+	"github.com/Minettyx/FoolslideProxy/pkg/server"
 	"net/http"
 	"os"
 )

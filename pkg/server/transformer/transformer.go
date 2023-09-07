@@ -1,8 +1,8 @@
 package transformer
 
 import (
-	"foolslideproxy/pkg/server/pathhandler"
-	"foolslideproxy/pkg/types"
+	"github.com/Minettyx/FoolslideProxy/pkg/server/pathhandler"
+	"github.com/Minettyx/FoolslideProxy/pkg/types"
 	"net/url"
 	"strings"
 )

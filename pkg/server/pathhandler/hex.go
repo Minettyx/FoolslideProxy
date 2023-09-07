@@ -2,7 +2,7 @@ package pathhandler
 
 import (
 	"fmt"
-	"foolslideproxy/pkg/utils"
+	"github.com/Minettyx/FoolslideProxy/pkg/utils"
 	"regexp"
 	"strings"
 )

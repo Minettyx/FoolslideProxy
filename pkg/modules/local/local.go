@@ -2,8 +2,8 @@ package local
 
 import (
 	"fmt"
-	"foolslideproxy/pkg/modules"
-	"foolslideproxy/pkg/types"
+	"github.com/Minettyx/FoolslideProxy/pkg/modules"
+	"github.com/Minettyx/FoolslideProxy/pkg/types"
 	"time"
 )
 

@@ -1,13 +1,13 @@
 package modules
 
 import (
-	"foolslideproxy/pkg/modules/ccm"
-	"foolslideproxy/pkg/modules/juinjutsu"
-	"foolslideproxy/pkg/modules/mangareader"
-	"foolslideproxy/pkg/modules/mangaworld"
-	"foolslideproxy/pkg/modules/onepiecepower"
-	"foolslideproxy/pkg/modules/tuttoanimemanga"
-	"foolslideproxy/pkg/types"
+	"github.com/Minettyx/FoolslideProxy/pkg/modules/ccm"
+	"github.com/Minettyx/FoolslideProxy/pkg/modules/juinjutsu"
+	"github.com/Minettyx/FoolslideProxy/pkg/modules/mangareader"
+	"github.com/Minettyx/FoolslideProxy/pkg/modules/mangaworld"
+	"github.com/Minettyx/FoolslideProxy/pkg/modules/onepiecepower"
+	"github.com/Minettyx/FoolslideProxy/pkg/modules/tuttoanimemanga"
+	"github.com/Minettyx/FoolslideProxy/pkg/types"
 )
 
 var Modules = [...]*types.Module{

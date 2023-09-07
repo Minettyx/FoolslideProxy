@@ -2,8 +2,8 @@ package formatter
 
 import (
 	"fmt"
-	"foolslideproxy/pkg/types"
-	"foolslideproxy/pkg/utils"
+	"github.com/Minettyx/FoolslideProxy/pkg/types"
+	"github.com/Minettyx/FoolslideProxy/pkg/utils"
 )
 
 func Directory(data []*types.PopularResult) string {
