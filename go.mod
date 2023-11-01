@@ -5,6 +5,7 @@ go 1.21.0
 require (
 	github.com/Minettyx/mangareader.to-image-unshuffle v1.0.0
 	github.com/PuerkitoBio/goquery v1.8.1
+	github.com/adrg/strutil v0.3.1
 	github.com/dop251/goja v0.0.0-20230828202809-3dbe69dd2b8e
 	github.com/go-chi/chi/v5 v5.0.10
 	github.com/go-chi/cors v1.2.1

@@ -1,17 +1,20 @@
 package routes
 
 import (
+	"io"
+	"log"
+	"net/http"
+	"sort"
+	"strings"
+	"sync"
+
 	"github.com/Minettyx/FoolslideProxy/pkg/modules"
 	"github.com/Minettyx/FoolslideProxy/pkg/server/errors"
 	"github.com/Minettyx/FoolslideProxy/pkg/server/formatter"
 	"github.com/Minettyx/FoolslideProxy/pkg/server/pathhandler"
 	"github.com/Minettyx/FoolslideProxy/pkg/server/transformer"
 	"github.com/Minettyx/FoolslideProxy/pkg/types"
-	"io"
-	"log"
-	"net/http"
-	"strings"
-	"sync"
+	"github.com/Minettyx/FoolslideProxy/pkg/utils"
 )
 
 func isSpecific(search string) *types.Module {
@@ -53,9 +56,9 @@ func Search(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		query := strings.TrimSpace(search[len(specific.Id)+1:])
+		search = strings.TrimSpace(search[len(specific.Id)+1:])
 
-		data, err := specific.Search(query, nil)
+		data, err := specific.Search(search, nil)
 
 		if err != nil {
 			log.Println(err)
@@ -105,6 +108,14 @@ func Search(w http.ResponseWriter, r *http.Request) {
 
 		wg.Wait()
 	}
+
+	// sort based on string distance from query
+	ds := utils.DistanceSorter{
+		Data:      results,
+		Distances: make([]float64, len(results)),
+	}
+	ds.ComputeDistances(search)
+	sort.Stable(ds)
 
 	w.Header().Set("Cache-Control", "max-age=3600, public")
 	io.WriteString(w, formatter.Search(results))
