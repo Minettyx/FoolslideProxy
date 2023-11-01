@@ -43,7 +43,7 @@ var db = [](func() *mangaDB){
 			Id:    "supportedsources",
 			Title: "Supported sources",
 			Manga: types.Manga{
-				Synopsis:  "Click on WebView for more info",
+				Synopsis:  "Click on WebView for more infos",
 				Author:    "Minettyx",
 				Artist:    "",
 				Img:       "",
@@ -52,29 +52,20 @@ var db = [](func() *mangaDB){
 			Chapters: chs,
 		}
 	},
-	// func() *mangaDB {
-	// 	return &mangaDB{
-	// 		Manga: types.Manga{
-	// 			Synopsis:  "Click on WebView for more info",
-	// 			Author:    "Minettyx",
-	// 			Artist:    "",
-	// 			Img:       "https://img.0kb.eu/kIq81BcY.jpg",
-	// 			Sourceurl: "https://github.com/Minettyx/FoolslideProxy/wiki/Fix-search-images",
-	// 		},
-	// 		Id:    "fixsearchimages",
-	// 		Title: "Fix search images",
-	// 		Chapters: []chapterDB{
-	// 			{
-	// 				Chapter: types.Chapter{
-	// 					Title: "Instructions",
-	// 					Id:    "instructions",
-	// 					Date:  utils.Must(time.Parse("2006.1.02", "2023.8.31")),
-	// 				},
-	// 				Images: []string{},
-	// 			},
-	// 		},
-	// 	}
-	// },
+	func() *mangaDB {
+		return &mangaDB{
+			Manga: types.Manga{
+				Synopsis:  "Download our fork of the Foolslide extention to see cover images when searching (click on WebView)",
+				Author:    "Minettyx",
+				Artist:    "",
+				Img:       "https://img.0kb.eu/kIq81BcY.jpg",
+				Sourceurl: "https://github.com/Minettyx/tachiyomi-extensions/releases",
+			},
+			Id:    "fixsearchimages",
+			Title: "Fix search images",
+			Chapters: []chapterDB{},
+		}
+	},
 }
 
 var internal = types.Module{
