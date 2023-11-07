@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"io"
 	"log"
 	"net/http"
 	"sort"
@@ -10,8 +9,8 @@ import (
 
 	"github.com/Minettyx/FoolslideProxy/pkg/modules"
 	"github.com/Minettyx/FoolslideProxy/pkg/server/errors"
-	"github.com/Minettyx/FoolslideProxy/pkg/server/formatter"
 	"github.com/Minettyx/FoolslideProxy/pkg/server/pathhandler"
+	"github.com/Minettyx/FoolslideProxy/pkg/server/templates"
 	"github.com/Minettyx/FoolslideProxy/pkg/server/transformer"
 	"github.com/Minettyx/FoolslideProxy/pkg/types"
 	"github.com/Minettyx/FoolslideProxy/pkg/utils"
@@ -118,5 +117,5 @@ func Search(w http.ResponseWriter, r *http.Request) {
 	sort.Stable(ds)
 
 	w.Header().Set("Cache-Control", "max-age=3600, public")
-	io.WriteString(w, formatter.Search(results))
+	templates.Search(results).Render(r.Context(), w)
 }

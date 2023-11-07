@@ -2,6 +2,8 @@ github.com/Minettyx/mangareader.to-image-unshuffle v1.0.0 h1:Lzm1mBZmriRKANHwImf
 github.com/Minettyx/mangareader.to-image-unshuffle v1.0.0/go.mod h1:KQ/GFEj99qXCs9OgGOUl6ULy4bw4aDnp5+I1OBceypQ=
 github.com/PuerkitoBio/goquery v1.8.1 h1:uQxhNlArOIdbrH1tr0UXwdVFgDcZDrZVdcpygAcwmWM=
 github.com/PuerkitoBio/goquery v1.8.1/go.mod h1:Q8ICL1kNUJ2sXGoAhPGUdYDJvgQgHzJsnnd3H7Ho5jQ=
+github.com/a-h/templ v0.2.432 h1:/8sSs0janzx/DvXlYi+3KUkZABvm7s3lejbvhPZ1rSg=
+github.com/a-h/templ v0.2.432/go.mod h1:6Lfhsl3Z4/vXl7jjEjkJRCqoWDGjDnuKgzjYMDSddas=
 github.com/adrg/strutil v0.3.1 h1:OLvSS7CSJO8lBii4YmBt8jiK9QOtB9CzCzwl4Ic/Fz4=
 github.com/adrg/strutil v0.3.1/go.mod h1:8h90y18QLrs11IBffcGX3NW/GFBXCMcNg4M7H6MspPA=
 github.com/andybalholm/cascadia v1.3.1 h1:nhxRkql1kdYCc8Snf7D5/D3spOX+dBgjA6u8x004T2c=

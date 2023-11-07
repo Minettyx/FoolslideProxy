@@ -1,16 +1,16 @@
 package routes
 
 import (
-	"github.com/Minettyx/FoolslideProxy/pkg/modules"
-	"github.com/Minettyx/FoolslideProxy/pkg/server/formatter"
-	"github.com/Minettyx/FoolslideProxy/pkg/server/pathhandler"
-	"github.com/Minettyx/FoolslideProxy/pkg/server/transformer"
-	"github.com/Minettyx/FoolslideProxy/pkg/types"
-	"io"
 	"log"
 	"net/http"
 	"sort"
 	"sync"
+
+	"github.com/Minettyx/FoolslideProxy/pkg/modules"
+	"github.com/Minettyx/FoolslideProxy/pkg/server/pathhandler"
+	"github.com/Minettyx/FoolslideProxy/pkg/server/templates"
+	"github.com/Minettyx/FoolslideProxy/pkg/server/transformer"
+	"github.com/Minettyx/FoolslideProxy/pkg/types"
 )
 
 func Latest1(w http.ResponseWriter, r *http.Request) {
@@ -59,5 +59,5 @@ func Latest1(w http.ResponseWriter, r *http.Request) {
 	})
 
 	w.Header().Set("Cache-Control", "max-age=3600, public")
-	io.WriteString(w, formatter.Latest(results))
+	templates.Latest(results).Render(r.Context(), w)
 }

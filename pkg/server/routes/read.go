@@ -1,14 +1,15 @@
 package routes
 
 import (
-	"github.com/Minettyx/FoolslideProxy/pkg/modules"
-	"github.com/Minettyx/FoolslideProxy/pkg/server/errors"
-	"github.com/Minettyx/FoolslideProxy/pkg/server/formatter"
-	"github.com/Minettyx/FoolslideProxy/pkg/server/pathhandler"
-	"github.com/Minettyx/FoolslideProxy/pkg/server/transformer"
 	"io"
 	"log"
 	"net/http"
+
+	"github.com/Minettyx/FoolslideProxy/pkg/modules"
+	"github.com/Minettyx/FoolslideProxy/pkg/server/errors"
+	"github.com/Minettyx/FoolslideProxy/pkg/server/pathhandler"
+	"github.com/Minettyx/FoolslideProxy/pkg/server/templates"
+	"github.com/Minettyx/FoolslideProxy/pkg/server/transformer"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -43,7 +44,7 @@ func Read(w http.ResponseWriter, r *http.Request) {
 			trans.Images(mod.Id, params.MangaId, params.ChapterId, images)
 
 			w.Header().Set("Cache-Control", "max-age=3600, public")
-			io.WriteString(w, formatter.Read(images))
+			io.WriteString(w, templates.Read(images))
 			return
 		}
 	}
