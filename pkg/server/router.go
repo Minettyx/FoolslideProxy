@@ -1,14 +1,14 @@
 package server
 
 import (
-	"github.com/Minettyx/FoolslideProxy/pkg/modules/local"
-	"github.com/Minettyx/FoolslideProxy/pkg/server/routes"
 	"net/http"
 	"time"
 
+	"github.com/Minettyx/FoolslideProxy/pkg/modules/local"
+	"github.com/Minettyx/FoolslideProxy/pkg/server/routes"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/go-chi/cors"
 )
 
 func Router() *chi.Mux {
@@ -17,12 +17,6 @@ func Router() *chi.Mux {
 	r.Use(middleware.Logger)
 	// r.Use(middleware.CleanPath)
 	r.Use(middleware.Timeout(60 * time.Second))
-
-	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins: []string{"*"},
-		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"},
-		AllowedHeaders: []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
-	}))
 
 	// add local module to modules.Modules to bypass dependecies cycle
 	local.Init()

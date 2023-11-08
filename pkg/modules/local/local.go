@@ -61,8 +61,8 @@ var db = [](func() *mangaDB){
 				Img:       "https://img.0kb.eu/kIq81BcY.jpg",
 				Sourceurl: "https://github.com/Minettyx/tachiyomi-extensions/releases",
 			},
-			Id:    "fixsearchimages",
-			Title: "Fix search images",
+			Id:       "fixsearchimages",
+			Title:    "Fix search images",
 			Chapters: []chapterDB{},
 		}
 	},
