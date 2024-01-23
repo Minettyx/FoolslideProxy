@@ -15,7 +15,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-var baseUrl = "https://www.mangaworld.bz/"
+var baseUrl = "https://www.mangaworld.ac/"
 
 var MangaWorld = types.Module{
 	Id:    "mw",
@@ -138,7 +138,7 @@ var MangaWorld = types.Module{
 			return nil, err
 		}
 
-		jsonstr, err := utils.StrBetween(string(body), `"pages":`, "]")
+		jsonstr, err := utils.StrBetween(string(body), id+`","pages":`, "]")
 		jsonstr += "]"
 		if err != nil {
 			return nil, err
