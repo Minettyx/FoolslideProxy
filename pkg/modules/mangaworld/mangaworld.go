@@ -120,7 +120,7 @@ var MangaWorld = types.Module{
 			Artist:    artist,
 			Img:       img,
 			Chapters:  chapters,
-			Sourceurl: "https://www.mangaworld.in/manga/" + id,
+			Sourceurl: baseUrl + "manga/" + id,
 		}
 
 		return &manga, nil
