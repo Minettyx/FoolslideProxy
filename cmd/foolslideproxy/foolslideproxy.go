@@ -13,7 +13,7 @@ func main() {
 	}
 
 	if os.Getenv("SIGN_TOKEN") == "" {
-		panic("Environment variablle SIGN_TOKEN not found")
+		panic("Environment variable SIGN_TOKEN not found")
 	}
 
 	err := http.ListenAndServe(":"+port, server.Router())
