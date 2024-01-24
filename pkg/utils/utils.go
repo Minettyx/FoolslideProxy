@@ -132,6 +132,18 @@ func StrBetween(str string, left string, right string) (string, error) {
 	return res, nil
 }
 
+func StrBetweenFirst(str string, left string, right string) (string, error) {
+	pts := strings.Split(str, left)
+
+	if len(pts) < 2 {
+		return "", fmt.Errorf("Left not found")
+	}
+
+	res := strings.Split(pts[1], right)[0]
+
+	return res, nil
+}
+
 func GetAndGoquery(url string) (*goquery.Document, error) {
 	res, err := http.Get(url)
 	if err != nil {

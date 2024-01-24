@@ -138,7 +138,7 @@ var MangaWorld = types.Module{
 			return nil, err
 		}
 
-		jsonstr, err := utils.StrBetween(string(body), id+`","pages":`, "]")
+		jsonstr, err := utils.StrBetweenFirst(string(body), `"pages":`, "]")
 		jsonstr += "]"
 		if err != nil {
 			return nil, err
