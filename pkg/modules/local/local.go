@@ -59,7 +59,7 @@ var db = [](func() *mangaDB){
 				Author:    "Minettyx",
 				Artist:    "",
 				Img:       "https://img.0kb.eu/kIq81BcY.jpg",
-				Sourceurl: "https://github.com/Minettyx/tachiyomi-extensions/releases",
+				Sourceurl: "https://github.com/Minettyx/foolslideproxy-extension/releases",
 			},
 			Id:       "fixsearchimages",
 			Title:    "Fix search images",
