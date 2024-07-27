@@ -1,6 +1,6 @@
 module github.com/Minettyx/FoolslideProxy
 
-go 1.21.0
+go 1.22.5
 
 require (
 	github.com/Minettyx/mangareader.to-image-unshuffle v1.0.0
