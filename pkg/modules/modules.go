@@ -2,6 +2,7 @@ package modules
 
 import (
 	"github.com/Minettyx/FoolslideProxy/pkg/modules/ccm"
+	"github.com/Minettyx/FoolslideProxy/pkg/modules/hastateam"
 	"github.com/Minettyx/FoolslideProxy/pkg/modules/juinjutsu"
 	"github.com/Minettyx/FoolslideProxy/pkg/modules/mangareader"
 	"github.com/Minettyx/FoolslideProxy/pkg/modules/mangaworld"
@@ -18,4 +19,6 @@ var Modules = [...]*types.Module{
 	&tuttoanimemanga.TuttoAnimeManga,
 	&onepiecepower.OnePiecePower,
 	&mangareader.MangaReader,
+	&hastateam.HastaTeam,
+	&hastateam.DDTHastaTeam,
 }

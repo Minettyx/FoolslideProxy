@@ -8,16 +8,16 @@ import (
 	"github.com/Minettyx/FoolslideProxy/pkg/utils"
 )
 
-var baseUrlDDT = "https://ddt.hastateam.com/api"
+var baseUrl = "https://reader.hastateam.com/api"
 
-var DDTHastaTeam = types.Module{
-	Id:    "ddtht",
-	Name:  "DDT HastaTeam",
+var HastaTeam = types.Module{
+	Id:    "ht",
+	Name:  "HastaTeam",
 	Flags: []types.ModuleFlag{},
 
 	Search: func(query string, language *string) ([]types.SearchResult, error) {
 		var data apiComics
-		err, _ := utils.GetAndJsonParse(baseUrlDDT+"/comics", &data)
+		err, _ := utils.GetAndJsonParse(baseUrl+"/comics", &data)
 		if err != nil {
 			return nil, err
 		}
@@ -41,7 +41,7 @@ var DDTHastaTeam = types.Module{
 	Manga: func(id string) (*types.Manga, error) {
 
 		var data apiComic
-		err, notfound := utils.GetAndJsonParse(baseUrlDDT+id, &data)
+		err, notfound := utils.GetAndJsonParse(baseUrl+id, &data)
 		if notfound {
 			return nil, nil
 		}
@@ -67,13 +67,13 @@ var DDTHastaTeam = types.Module{
 			Artist:    data.Comic.Artist,
 			Img:       data.Comic.Thumbnail,
 			Chapters:  chapters,
-			Sourceurl: "https://ddt.hastateam.com" + id,
+			Sourceurl: "https://reader.hastateam.com" + id,
 		}, nil
 	},
 
 	Chapter: func(manga, id string) ([]string, error) {
 		var data apiRead
-		err, notfound := utils.GetAndJsonParse(baseUrlDDT+id, &data)
+		err, notfound := utils.GetAndJsonParse(baseUrl+id, &data)
 		if notfound {
 			return nil, nil
 		}
