@@ -1,6 +1,6 @@
-package tuttoanimemanga
+package type0
 
-type searchRes struct {
+type apiComics struct {
 	Comics []struct {
 		Url       string `json:"url"`
 		Thumbnail string `json:"thumbnail"`
@@ -8,7 +8,7 @@ type searchRes struct {
 	} `json:"comics"`
 }
 
-type mangaRes struct {
+type apiComic struct {
 	Comic struct {
 		Thumbnail   string `json:"thumbnail"`
 		Description string `json:"description"`
@@ -22,7 +22,7 @@ type mangaRes struct {
 	} `json:"comic"`
 }
 
-type chapterRes struct {
+type apiRead struct {
 	Chapter struct {
 		Pages []string `json:"pages"`
 	} `json:"chapter"`

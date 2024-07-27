@@ -16,9 +16,9 @@ var Modules = [...]*types.Module{
 	&ccm.CCM,
 	&juinjutsu.JuinJutsu,
 	&mangaworld.MangaWorld,
-	&tuttoanimemanga.TuttoAnimeManga,
+	tuttoanimemanga.TuttoAnimeManga,
 	&onepiecepower.OnePiecePower,
 	&mangareader.MangaReader,
-	&hastateam.HastaTeam,
-	&hastateam.DDTHastaTeam,
+	hastateam.HastaTeam,
+	hastateam.DDTHastaTeam,
 }

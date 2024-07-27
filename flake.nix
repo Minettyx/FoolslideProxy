@@ -34,7 +34,7 @@
       default = pkgs.buildGoModule {
         name = "foolslideproxy";
         src = ./.;
-        vendorHash = "sha256-hEyV9aSe5jypKvZMt1doejQd8ARAL1hZEl0LTmQUPlo=";
+        vendorHash = "sha256-HxqmyBF03zZSIqo6g8lLDO9+Au0Zpt6jgAzZGg8p/tw=";
         nativeBuildInputs = [];
       };
     });

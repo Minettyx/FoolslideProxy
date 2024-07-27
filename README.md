@@ -24,8 +24,6 @@ Check them [here](https://github.com/Minettyx/FoolslideProxy/wiki/Available-sour
 
 ## Usage
 
-You can run the proxy on your own or use the publicly available instance at foolslideproxy.minettyx.com
-
 ### Run instance using docker
 
 the SIGN_TOKEN enviroment variable is used to sign the urls for images proxied by the server
