@@ -1,4 +1,4 @@
-package type0
+package pizzareader
 
 import (
 	"net/url"
@@ -11,13 +11,18 @@ import (
 
 
 
-func Type0(config generic.GenericConfig) *types.Module {
+func PizzaReader(config generic.GenericConfig) *types.Module {
 	return &types.Module{
 		Id:    config.Id,
 		Name:  config.Name,
 		Flags: config.Flags,
 
 		Search: func(query string, language *string) ([]types.SearchResult, error) {
+
+      if len(query) < 3 {
+        return nil, nil
+      }
+
 			var data apiComics
 			err, _ := utils.GetAndJsonParse(config.BaseUrl+"/api/search/"+url.QueryEscape(query), &data)
 

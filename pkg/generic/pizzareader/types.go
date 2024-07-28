@@ -1,4 +1,4 @@
-package type0
+package pizzareader
 
 type apiComics struct {
 	Comics []struct {
