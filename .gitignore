@@ -1,1 +1,5 @@
-/result
+# Nix
+result*
+
+# Misc
+/.direnv
