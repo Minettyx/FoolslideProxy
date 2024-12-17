@@ -28,7 +28,7 @@ func Read(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, mod := range modules.Modules {
-		if mod.Id == params.ModId {
+		if mod.Id() == params.ModId {
 			images, err := mod.Chapter(params.MangaId, params.ChapterId)
 			if err != nil {
 				log.Println(err)
@@ -41,7 +41,7 @@ func Read(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
-			trans.Images(mod.Id, params.MangaId, params.ChapterId, images)
+			trans.Images(mod.Id(), params.MangaId, params.ChapterId, images)
 
 			w.Header().Set("Cache-Control", "max-age=3600, public")
 			io.WriteString(w, templates.Read(images))

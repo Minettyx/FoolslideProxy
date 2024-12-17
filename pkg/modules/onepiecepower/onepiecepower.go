@@ -2,214 +2,235 @@ package onepiecepower
 
 import (
 	"fmt"
-	"github.com/Minettyx/FoolslideProxy/pkg/types"
-	"github.com/Minettyx/FoolslideProxy/pkg/utils"
 	"io"
 	"net/http"
 	"net/url"
 	"strings"
 
+	"github.com/Minettyx/FoolslideProxy/pkg/types"
+	"github.com/Minettyx/FoolslideProxy/pkg/utils"
+
 	"github.com/PuerkitoBio/goquery"
 	"github.com/dop251/goja"
 )
 
-var baseurl = "https://onepiecepower.com/"
+type OnePiecePower struct {
+	baseUrl string
+}
 
-var OnePiecePower = types.Module{
-	Id:    "opp",
-	Name:  "One Piece Power",
-	Flags: types.ModuleFlags{},
+var Module = OnePiecePower{
+	baseUrl: "https://onepiecepower.com/",
+}
 
-	Search: func(query string, language *string) ([]types.SearchResult, error) {
-		res, err := http.Get(baseurl + "manga8/lista-manga")
-		if err != nil {
-			return nil, err
-		}
+var _ types.Module = OnePiecePower{}
 
-		defer res.Body.Close()
+func (c OnePiecePower) Id() string {
+	return "opp"
+}
+func (c OnePiecePower) Name() string {
+	return "One Piece Power"
+}
+func (c OnePiecePower) Flags() types.ModuleFlags {
+	return []types.ModuleFlag{}
+}
 
-		doc, err := goquery.NewDocumentFromReader(res.Body)
-		if err != nil {
-			return nil, err
-		}
+func (c OnePiecePower) Search(query string) ([]types.SearchResult, error) {
+	res, err := http.Get(c.baseUrl + "manga8/lista-manga")
+	if err != nil {
+		return nil, err
+	}
 
-		results := []types.SearchResult{}
+	defer res.Body.Close()
 
-		doc.Find("#allList > a").Each(func(i int, s *goquery.Selection) {
-			idd, _ := s.Attr("href")
+	doc, err := goquery.NewDocumentFromReader(res.Body)
+	if err != nil {
+		return nil, err
+	}
 
-			pts := strings.Split(idd, "/")
-			pts[len(pts)-1] = "images/cover.jpg"
-			image := baseurl + "manga8/" + strings.Join(pts, "/")
+	results := []types.SearchResult{}
 
-			// println(image)
+	doc.Find("#allList > a").Each(func(i int, s *goquery.Selection) {
+		idd, _ := s.Attr("href")
 
-			if utils.StrConaintsIgnoreCase(s.Text(), query) {
-				results = append(results, types.SearchResult{
-					Id:    idd,
-					Title: s.Text(),
-					Image: image,
-				})
-			}
-		})
-
-		return results, nil
-	},
-
-	Manga: func(id string) (*types.Manga, error) {
-		res, err := http.Get(baseurl + "manga8/" + id)
-		if err != nil {
-			return nil, err
-		}
-
-		defer res.Body.Close()
-
-		doc, err := goquery.NewDocumentFromReader(res.Body)
-		if err != nil {
-			return nil, err
-		}
-
-		key := ""
-		author := ""
-		artist := ""
-		desc := ""
-		doc.Find("body > table > tbody > tr:nth-child(3) > td > *").Each(func(i int, s *goquery.Selection) {
-			if s.Is("span") {
-				key = s.Text()
-			} else if s.Is("em") {
-				if key == "Autore:" {
-					author = s.Text()
-				} else if key == "Descrizione:" {
-					desc = s.Text()
-				} else if key == "Artista:" {
-					artist = s.Text()
-				}
-			}
-		})
-
-		pts := strings.Split(id, "/")
+		pts := strings.Split(idd, "/")
 		pts[len(pts)-1] = "images/cover.jpg"
-		image := baseurl + "manga8/" + strings.Join(pts, "/")
+		image := c.baseUrl + "manga8/" + strings.Join(pts, "/")
 
-		chapters := []types.Chapter{}
-		doc.Find("tbody > tr:nth-child(5) > td > a").Each(func(i int, s *goquery.Selection) {
-			chid, _ := s.Attr("href")
-			chname := s.Text()
+		// println(image)
 
-			if strings.Contains(chname, "(Disponibile") || strings.Contains(chname, "(Available") {
-				return
-			}
-
-			chapters = append(chapters, types.Chapter{
-				Title: chname,
-				Id:    chid,
+		if utils.StrConaintsIgnoreCase(s.Text(), query) {
+			results = append(results, types.SearchResult{
+				Id:    idd,
+				Title: s.Text(),
+				Image: image,
 			})
-		})
-
-		for i, j := 0, len(chapters)-1; i < j; i, j = i+1, j-1 {
-			chapters[i], chapters[j] = chapters[j], chapters[i]
 		}
+	})
 
-		return &types.Manga{
-			Synopsis:  desc,
-			Author:    author,
-			Artist:    artist,
-			Img:       image,
-			Sourceurl: baseurl + "manga8/" + id,
-			Chapters:  chapters,
-		}, nil
-	},
+	return results, nil
+}
 
-	Chapter: func(manga, id string) ([]string, error) {
-		pts := strings.Split(manga, "/")
-		pts[len(pts)-1] = id
-		urls := baseurl + "manga8/" + strings.Join(pts, "/")
-		// urlobj, err := url.Parse(urls)
-		// if err != nil {
-		// 	return nil, err
-		// }
+func (c OnePiecePower) Manga(id string) (*types.Manga, error) {
+	res, err := http.Get(c.baseUrl + "manga8/" + id)
+	if err != nil {
+		return nil, err
+	}
 
-		resp, err := http.Get(urls)
-		if err != nil {
-			return nil, err
-		}
+	defer res.Body.Close()
 
-		defer resp.Body.Close()
+	doc, err := goquery.NewDocumentFromReader(res.Body)
+	if err != nil {
+		return nil, err
+	}
 
-		html, err := io.ReadAll(resp.Body)
-		if err != nil {
-			return nil, err
-		}
-
-		base, err := pageBaseUrl(string(html), manga, id)
-
-		if err != nil {
-			return nil, err
-		}
-
-		// println(base)
-
-		// calculate capacity
-		capacity := 20
-		for {
-			exis, err := pageExist(base, capacity+1)
-			if err != nil {
-				return nil, err
+	key := ""
+	author := ""
+	artist := ""
+	desc := ""
+	doc.Find("body > table > tbody > tr:nth-child(3) > td > *").Each(func(i int, s *goquery.Selection) {
+		if s.Is("span") {
+			key = s.Text()
+		} else if s.Is("em") {
+			if key == "Autore:" {
+				author = s.Text()
+			} else if key == "Descrizione:" {
+				desc = s.Text()
+			} else if key == "Artista:" {
+				artist = s.Text()
 			}
+		}
+	})
 
-			if exis {
-				capacity *= 2
-			} else {
+	pts := strings.Split(id, "/")
+	pts[len(pts)-1] = "images/cover.jpg"
+	image := c.baseUrl + "manga8/" + strings.Join(pts, "/")
+
+	chapters := []types.Chapter{}
+	doc.Find("tbody > tr:nth-child(5) > td > a").Each(func(i int, s *goquery.Selection) {
+		chid, _ := s.Attr("href")
+		chname := s.Text()
+
+		if strings.Contains(chname, "(Disponibile") || strings.Contains(chname, "(Available") {
+			return
+		}
+
+		chapters = append(chapters, types.Chapter{
+			Title: chname,
+			Id:    chid,
+		})
+	})
+
+	for i, j := 0, len(chapters)-1; i < j; i, j = i+1, j-1 {
+		chapters[i], chapters[j] = chapters[j], chapters[i]
+	}
+
+	return &types.Manga{
+		Synopsis:  desc,
+		Author:    author,
+		Artist:    artist,
+		Img:       image,
+		Sourceurl: c.baseUrl + "manga8/" + id,
+		Chapters:  chapters,
+	}, nil
+}
+
+func (c OnePiecePower) Chapter(manga, id string) ([]string, error) {
+	pts := strings.Split(manga, "/")
+	pts[len(pts)-1] = id
+	urls := c.baseUrl + "manga8/" + strings.Join(pts, "/")
+	// urlobj, err := url.Parse(urls)
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	resp, err := http.Get(urls)
+	if err != nil {
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+
+	html, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	base, err := pageBaseUrl(string(html), manga, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	// println(base)
+
+	// calculate capacity
+	capacity := 20
+	for {
+		exis, err := pageExist(base, capacity+1)
+		if err != nil {
+			return nil, err
+		}
+
+		if exis {
+			capacity *= 2
+		} else {
+			break
+		}
+	}
+
+	// println("capacity: ", capacity)
+
+	// binary search
+	start := 1
+	end := capacity
+	size := capacity
+
+	for start <= end {
+		middle := (start + end) / 2
+		// println("middle:", middle)
+
+		exis, err := pageExist(base, middle)
+		if err != nil {
+			return nil, err
+		}
+
+		if exis {
+			if end-start <= 1 {
+				size = middle
 				break
 			}
-		}
-
-		// println("capacity: ", capacity)
-
-		// binary search
-		start := 1
-		end := capacity
-		size := capacity
-
-		for start <= end {
-			middle := (start + end) / 2
-			// println("middle:", middle)
-
-			exis, err := pageExist(base, middle)
-			if err != nil {
-				return nil, err
+			start = middle + 1
+		} else {
+			if end-start <= 1 {
+				size = middle - 1
+				break
 			}
-
-			if exis {
-				if end-start <= 1 {
-					size = middle
-					break
-				}
-				start = middle + 1
-			} else {
-				if end-start <= 1 {
-					size = middle - 1
-					break
-				}
-				end = middle - 1
-			}
+			end = middle - 1
 		}
+	}
 
-		// println("capacity: ", size)
+	// println("capacity: ", size)
 
-		results := []string{}
-		for i := 1; i <= size; i++ {
-			results = append(results, pageUrl(base, i))
-		}
+	results := []string{}
+	for i := 1; i <= size; i++ {
+		results = append(results, pageUrl(base, i))
+	}
 
-		return results, nil
-	},
+	return results, nil
+}
+
+func (c OnePiecePower) Latest() ([]types.LatestResult, error) {
+	return []types.LatestResult{}, nil
+}
+
+func (c OnePiecePower) Popular() ([]types.PopularResult, error) {
+	return []types.PopularResult{}, nil
 }
 
 func pageBaseUrl(html string, manga string, chapter string) (string, error) {
 	pts := strings.Split(manga, "/")
 	pts[len(pts)-1] = chapter
-	urls := baseurl + "manga8/" + strings.Join(pts, "/")
+	urls := Module.baseUrl + "manga8/" + strings.Join(pts, "/")
 	urlobj, err := url.Parse(urls)
 	if err != nil {
 		return "", err

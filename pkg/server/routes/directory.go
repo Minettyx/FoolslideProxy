@@ -26,12 +26,8 @@ func Directory1(w http.ResponseWriter, r *http.Request) {
 	results := []*types.PopularResult{}
 
 	for _, mod := range modules.Modules {
-		go func(mod *types.Module) {
+		go func(mod types.Module) {
 			defer wg.Done()
-
-			if mod.Popular == nil {
-				return
-			}
 
 			res, err := mod.Popular()
 			if err != nil {
@@ -45,7 +41,7 @@ func Directory1(w http.ResponseWriter, r *http.Request) {
 			}
 
 			for i := range res {
-				trans.PopularResult(mod.Id, &res[i])
+				trans.PopularResult(mod.Id(), &res[i])
 				results = append(results, &res[i])
 			}
 

@@ -26,12 +26,8 @@ func Latest1(w http.ResponseWriter, r *http.Request) {
 	results := []*types.LatestResult{}
 
 	for _, mod := range modules.Modules {
-		go func(mod *types.Module) {
+		go func(mod types.Module) {
 			defer wg.Done()
-
-			if mod.Latest == nil {
-				return
-			}
 
 			res, err := mod.Latest()
 			if err != nil {
@@ -45,7 +41,7 @@ func Latest1(w http.ResponseWriter, r *http.Request) {
 			}
 
 			for i := range res {
-				trans.LatestResult(mod.Id, &res[i])
+				trans.LatestResult(mod.Id(), &res[i])
 				results = append(results, &res[i])
 			}
 

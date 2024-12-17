@@ -16,9 +16,9 @@ import (
 	"github.com/Minettyx/FoolslideProxy/pkg/utils"
 )
 
-func isSpecific(search string) *types.Module {
+func isSpecific(search string) types.Module {
 	for _, mod := range modules.Modules {
-		if strings.HasPrefix(search, strings.ToLower(mod.Id)+":") {
+		if strings.HasPrefix(search, strings.ToLower(mod.Id())+":") {
 			return mod
 		}
 	}
@@ -55,9 +55,9 @@ func Search(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		search = strings.TrimSpace(search[len(specific.Id)+1:])
+		search = strings.TrimSpace(search[len(specific.Id())+1:])
 
-		data, err := specific.Search(search, nil)
+		data, err := specific.Search(search)
 
 		if err != nil {
 			log.Println(err)
@@ -70,7 +70,7 @@ func Search(w http.ResponseWriter, r *http.Request) {
 		}
 
 		for i := range data {
-			trans.SearchResult(specific.Id, &data[i])
+			trans.SearchResult(specific.Id(), &data[i])
 			results = append(results, &data[i])
 		}
 
@@ -80,14 +80,14 @@ func Search(w http.ResponseWriter, r *http.Request) {
 		wg.Add(len(modules.Modules))
 
 		for _, mod := range modules.Modules {
-			go func(mod *types.Module) {
+			go func(mod types.Module) {
 				defer wg.Done()
 
-				if mod.Flags.Has(types.DISABLE_GLOBAL_SEARCH) || mod.Search == nil {
+				if mod.Flags().Has(types.DISABLE_GLOBAL_SEARCH) {
 					return
 				}
 
-				res, err := mod.Search(search, nil)
+				res, err := mod.Search(search)
 				if err != nil {
 					// TODO: send fake manga to tell that a source has failed
 					log.Println(err)
@@ -99,7 +99,7 @@ func Search(w http.ResponseWriter, r *http.Request) {
 				}
 
 				for i := range res {
-					trans.SearchResult(mod.Id, &res[i])
+					trans.SearchResult(mod.Id(), &res[i])
 					results = append(results, &res[i])
 				}
 			}(mod)

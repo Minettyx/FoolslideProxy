@@ -38,7 +38,7 @@ templ Search(data []*types.SearchResult) {
 	}
 }
 
-templ Series(mod *types.Module, data *types.Manga) {
+templ Series(mod types.Module, data *types.Manga) {
 	<html>
 		<head></head>
 		<body>
@@ -54,7 +54,7 @@ templ Series(mod *types.Module, data *types.Manga) {
 								<div class="info">
 									<b>Author</b>: { utils.AuthorArtist(data.Author, data.Artist) }
 									<br/>
-									<b>Artist</b>: { mod.Name }
+									<b>Artist</b>: { mod.Name() }
 									<br/>
 									<b>Synopsis</b>: { data.Synopsis }
 								</div>

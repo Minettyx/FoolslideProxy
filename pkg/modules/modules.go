@@ -10,13 +10,13 @@ import (
 	"github.com/Minettyx/FoolslideProxy/pkg/types"
 )
 
-var Modules = [...]*types.Module{
+var Modules = [...]types.Module{
 	nil, // local module to bypass dependencies cycle, initialized in server/router.go
-	&ccm.CCM,
-	&juinjutsu.JuinJutsu,
-	&mangaworld.MangaWorld,
-	&onepiecepower.OnePiecePower,
-	&mangareader.MangaReader,
+	ccm.Module,
+	juinjutsu.Module,
+	mangaworld.Module,
+	onepiecepower.Module,
+	mangareader.Module,
 
 	pizzareader.TuttoAnimeManga,
 	pizzareader.HastaTeam,

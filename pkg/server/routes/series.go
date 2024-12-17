@@ -27,7 +27,7 @@ func Series(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, mod := range modules.Modules {
-		if mod.Id == params.ModId {
+		if mod.Id() == params.ModId {
 			data, err := mod.Manga(params.MangaId)
 
 			if err != nil {
@@ -41,7 +41,7 @@ func Series(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
-			trans.Manga(mod.Id, params.MangaId, data)
+			trans.Manga(mod.Id(), params.MangaId, data)
 
 			w.Header().Set("Cache-Control", "max-age=3600, public")
 			templates.Series(mod, data).Render(r.Context(), w)
@@ -63,7 +63,7 @@ func SeriesRedirect(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, mod := range modules.Modules {
-		if mod.Id == params.ModId {
+		if mod.Id() == params.ModId {
 			data, err := mod.Manga(params.MangaId)
 			if err != nil {
 				log.Println(err)

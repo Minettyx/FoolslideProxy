@@ -1,34 +1,33 @@
 package pizzareader
 
 import (
-	"github.com/Minettyx/FoolslideProxy/pkg/generic"
 	"github.com/Minettyx/FoolslideProxy/pkg/types"
 )
 
-var DDTHastaTeam = PizzaReader(generic.GenericConfig{
-	Id:      "ddtht",
-	Name:    "DDT HastaTeam",
-	Flags:   []types.ModuleFlag{},
-	BaseUrl: "https://ddt.hastateam.com",
-})
+var DDTHastaTeam = pizzaReader{
+	moduleId:    "ddtht",
+	moduleName:  "DDT HastaTeam",
+	moduleFlags: []types.ModuleFlag{},
+	baseUrl:     "https://ddt.hastateam.com",
+}
 
-var HastaTeam = PizzaReader(generic.GenericConfig{
-	Id:      "ht",
-	Name:    "HastaTeam",
-	Flags:   []types.ModuleFlag{},
-	BaseUrl: "https://reader.hastateam.com",
-})
+var HastaTeam = pizzaReader{
+	moduleId:    "ht",
+	moduleName:  "HastaTeam",
+	moduleFlags: []types.ModuleFlag{},
+	baseUrl:     "https://reader.hastateam.com",
+}
 
-var TuttoAnimeManga = PizzaReader(generic.GenericConfig{
-	Id:      "tam",
-	Name:    "TuttoAnimeManga",
-	Flags:   types.ModuleFlags{},
-	BaseUrl: "https://tuttoanimemanga.net",
-})
+var TuttoAnimeManga = pizzaReader{
+	moduleId:    "tam",
+	moduleName:  "TuttoAnimeManga",
+	moduleFlags: []types.ModuleFlag{},
+	baseUrl:     "https://tuttoanimemanga.net",
+}
 
-var PhoenixScans = PizzaReader(generic.GenericConfig{
-	Id:      "ps",
-	Name:    "Phoenix Scans",
-	Flags:   types.ModuleFlags{},
-	BaseUrl: "https://www.phoenixscans.com",
-})
+var PhoenixScans = pizzaReader{
+	moduleId:    "ps",
+	moduleName:  "Phoenix Scans",
+	moduleFlags: []types.ModuleFlag{},
+	baseUrl:     "https://www.phoenixscans.com",
+}

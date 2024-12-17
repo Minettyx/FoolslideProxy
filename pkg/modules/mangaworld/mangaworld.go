@@ -4,168 +4,189 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/Minettyx/FoolslideProxy/pkg/types"
-	"github.com/Minettyx/FoolslideProxy/pkg/utils"
 	"io"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
 
+	"github.com/Minettyx/FoolslideProxy/pkg/types"
+	"github.com/Minettyx/FoolslideProxy/pkg/utils"
+
 	"github.com/PuerkitoBio/goquery"
 )
 
-var baseUrl = "https://www.mangaworld.ac/"
+type MangaWorld struct {
+	baseUrl string
+}
 
-var MangaWorld = types.Module{
-	Id:    "mw",
-	Name:  "MangaWorld",
-	Flags: []types.ModuleFlag{},
+var Module = MangaWorld{
+	baseUrl: "https://www.mangaworld.ac/",
+}
 
-	Search: func(query string, language *string) ([]types.SearchResult, error) {
-		res, err := http.Get(baseUrl + "archive?keyword=" + query)
-		if err != nil {
-			return nil, err
+var _ types.Module = MangaWorld{}
+
+func (c MangaWorld) Id() string {
+	return "mw"
+}
+func (c MangaWorld) Name() string {
+	return "MangaWorld"
+}
+func (c MangaWorld) Flags() types.ModuleFlags {
+	return []types.ModuleFlag{}
+}
+
+func (c MangaWorld) Search(query string) ([]types.SearchResult, error) {
+	res, err := http.Get(c.baseUrl + "archive?keyword=" + query)
+	if err != nil {
+		return nil, err
+	}
+
+	defer res.Body.Close()
+
+	doc, err := goquery.NewDocumentFromReader(res.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	results := []types.SearchResult{}
+
+	doc.Find(".entry").Each(func(i int, s *goquery.Selection) {
+		mid, _ := s.Find("a").Attr("href")
+		pts := strings.Split(mid, "/manga/")
+		if len(pts) < 2 {
+			return
 		}
+		mid = pts[1]
 
-		defer res.Body.Close()
+		title := s.Find(".manga-title").Text()
 
-		doc, err := goquery.NewDocumentFromReader(res.Body)
-		if err != nil {
-			return nil, err
-		}
+		image, _ := s.Find("img").Attr("src")
 
-		results := []types.SearchResult{}
-
-		doc.Find(".entry").Each(func(i int, s *goquery.Selection) {
-			mid, _ := s.Find("a").Attr("href")
-			pts := strings.Split(mid, "/manga/")
-			if len(pts) < 2 {
-				return
-			}
-			mid = pts[1]
-
-			title := s.Find(".manga-title").Text()
-
-			image, _ := s.Find("img").Attr("src")
-
-			results = append(results, types.SearchResult{
-				Id:    mid,
-				Title: title,
-				Image: image,
-			})
+		results = append(results, types.SearchResult{
+			Id:    mid,
+			Title: title,
+			Image: image,
 		})
+	})
 
-		return results, nil
-	},
+	return results, nil
+}
 
-	Manga: func(id string) (*types.Manga, error) {
-		res, err := http.Get(baseUrl + "manga/" + id)
+func (c MangaWorld) Manga(id string) (*types.Manga, error) {
+	res, err := http.Get(c.baseUrl + "manga/" + id)
+	if err != nil {
+		return nil, err
+	}
+
+	defer res.Body.Close()
+
+	doc, err := goquery.NewDocumentFromReader(res.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	synopsis := doc.Find("#noidungm").Text()
+	author := ""
+	artist := ""
+
+	doc.Find("div.col-12.col-md-6").Each(func(i int, s *goquery.Selection) {
+		inx := s.Find("span").Text()
+		val := s.Find("a").Text()
+
+		if inx == "Autore: " {
+			author = val
+		} else if inx == "Artista: " {
+			artist = val
+		}
+	})
+
+	img, _ := doc.Find(".rounded").Attr("src")
+
+	chapters := []types.Chapter{}
+
+	doc.Find(".chapter").Each(func(i int, s *goquery.Selection) {
+		chtitle := s.Find("span").Text()
+
+		chid, _ := s.Find("a").Attr("href")
+		pts := strings.Split(chid, "/read/")
+		if len(pts) < 2 {
+			return
+		}
+		chid = pts[1]
+
+		datestr := s.Find("i").Text()
+		dat, err := parseDate(datestr)
 		if err != nil {
-			return nil, err
+			return
 		}
 
-		defer res.Body.Close()
-
-		doc, err := goquery.NewDocumentFromReader(res.Body)
-		if err != nil {
-			return nil, err
-		}
-
-		synopsis := doc.Find("#noidungm").Text()
-		author := ""
-		artist := ""
-
-		doc.Find("div.col-12.col-md-6").Each(func(i int, s *goquery.Selection) {
-			inx := s.Find("span").Text()
-			val := s.Find("a").Text()
-
-			if inx == "Autore: " {
-				author = val
-			} else if inx == "Artista: " {
-				artist = val
-			}
+		chapters = append(chapters, types.Chapter{
+			Title: chtitle,
+			Id:    chid,
+			Date:  *dat,
 		})
+	})
 
-		img, _ := doc.Find(".rounded").Attr("src")
+	manga := types.Manga{
+		Synopsis:  synopsis,
+		Author:    author,
+		Artist:    artist,
+		Img:       img,
+		Chapters:  chapters,
+		Sourceurl: c.baseUrl + "manga/" + id,
+	}
 
-		chapters := []types.Chapter{}
+	return &manga, nil
+}
 
-		doc.Find(".chapter").Each(func(i int, s *goquery.Selection) {
-			chtitle := s.Find("span").Text()
+func (c MangaWorld) Chapter(manga, id string) ([]string, error) {
+	res, err := http.Get(c.baseUrl + "manga/" + manga + "/read/" + id)
+	if err != nil {
+		return nil, err
+	}
 
-			chid, _ := s.Find("a").Attr("href")
-			pts := strings.Split(chid, "/read/")
-			if len(pts) < 2 {
-				return
-			}
-			chid = pts[1]
+	defer res.Body.Close()
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
 
-			datestr := s.Find("i").Text()
-			dat, err := parseDate(datestr)
-			if err != nil {
-				return
-			}
+	jsonstr, err := utils.StrBetweenFirst(string(body), `"pages":`, "]")
+	jsonstr += "]"
+	if err != nil {
+		return nil, err
+	}
 
-			chapters = append(chapters, types.Chapter{
-				Title: chtitle,
-				Id:    chid,
-				Date:  *dat,
-			})
-		})
+	var pages []string
+	err = json.Unmarshal([]byte(jsonstr), &pages)
+	if err != nil {
+		return nil, err
+	}
 
-		manga := types.Manga{
-			Synopsis:  synopsis,
-			Author:    author,
-			Artist:    artist,
-			Img:       img,
-			Chapters:  chapters,
-			Sourceurl: baseUrl + "manga/" + id,
-		}
+	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(body))
+	if err != nil {
+		return nil, err
+	}
 
-		return &manga, nil
-	},
+	firstimage, _ := doc.Find("#page").Find("img").Attr("src")
+	pts := strings.Split(firstimage, "/")
+	pts = pts[0 : len(pts)-1]
+	baseimageurl := strings.Join(pts, "/")
 
-	Chapter: func(manga, id string) ([]string, error) {
-		res, err := http.Get(baseUrl + "manga/" + manga + "/read/" + id)
-		if err != nil {
-			return nil, err
-		}
+	for i := range pages {
+		pages[i] = baseimageurl + "/" + pages[i]
+	}
 
-		defer res.Body.Close()
-		body, err := io.ReadAll(res.Body)
-		if err != nil {
-			return nil, err
-		}
+	return pages, nil
+}
 
-		jsonstr, err := utils.StrBetweenFirst(string(body), `"pages":`, "]")
-		jsonstr += "]"
-		if err != nil {
-			return nil, err
-		}
+func (c MangaWorld) Latest() ([]types.LatestResult, error) {
+	return []types.LatestResult{}, nil
+}
 
-		var pages []string
-		err = json.Unmarshal([]byte(jsonstr), &pages)
-		if err != nil {
-			return nil, err
-		}
-
-		doc, err := goquery.NewDocumentFromReader(bytes.NewReader(body))
-		if err != nil {
-			return nil, err
-		}
-
-		firstimage, _ := doc.Find("#page").Find("img").Attr("src")
-		pts := strings.Split(firstimage, "/")
-		pts = pts[0 : len(pts)-1]
-		baseimageurl := strings.Join(pts, "/")
-
-		for i := range pages {
-			pages[i] = baseimageurl + "/" + pages[i]
-		}
-
-		return pages, nil
-	},
+func (c MangaWorld) Popular() ([]types.PopularResult, error) {
+	return []types.PopularResult{}, nil
 }
 
 func parseDate(input string) (*time.Time, error) {
