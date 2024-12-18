@@ -14,27 +14,27 @@ import (
 	"github.com/dop251/goja"
 )
 
-type OnePiecePower struct {
+type onePiecePower struct {
 	baseUrl string
 }
 
-var Module = OnePiecePower{
+var Module = onePiecePower{
 	baseUrl: "https://onepiecepower.com/",
 }
 
-var _ types.Module = OnePiecePower{}
+var _ types.Module = onePiecePower{}
 
-func (c OnePiecePower) Id() string {
+func (c onePiecePower) Id() string {
 	return "opp"
 }
-func (c OnePiecePower) Name() string {
+func (c onePiecePower) Name() string {
 	return "One Piece Power"
 }
-func (c OnePiecePower) Flags() types.ModuleFlags {
+func (c onePiecePower) Flags() types.ModuleFlags {
 	return []types.ModuleFlag{}
 }
 
-func (c OnePiecePower) Search(query string) ([]types.SearchResult, error) {
+func (c onePiecePower) Search(query string) ([]types.SearchResult, error) {
 	res, err := http.Get(c.baseUrl + "manga8/lista-manga")
 	if err != nil {
 		return nil, err
@@ -70,7 +70,7 @@ func (c OnePiecePower) Search(query string) ([]types.SearchResult, error) {
 	return results, nil
 }
 
-func (c OnePiecePower) Manga(id string) (*types.Manga, error) {
+func (c onePiecePower) Manga(id string) (*types.Manga, error) {
 	res, err := http.Get(c.baseUrl + "manga8/" + id)
 	if err != nil {
 		return nil, err
@@ -134,7 +134,7 @@ func (c OnePiecePower) Manga(id string) (*types.Manga, error) {
 	}, nil
 }
 
-func (c OnePiecePower) Chapter(manga, id string) ([]string, error) {
+func (c onePiecePower) Chapter(manga, id string) ([]string, error) {
 	pts := strings.Split(manga, "/")
 	pts[len(pts)-1] = id
 	urls := c.baseUrl + "manga8/" + strings.Join(pts, "/")
@@ -219,11 +219,11 @@ func (c OnePiecePower) Chapter(manga, id string) ([]string, error) {
 	return results, nil
 }
 
-func (c OnePiecePower) Latest() ([]types.LatestResult, error) {
+func (c onePiecePower) Latest() ([]types.LatestResult, error) {
 	return []types.LatestResult{}, nil
 }
 
-func (c OnePiecePower) Popular() ([]types.PopularResult, error) {
+func (c onePiecePower) Popular() ([]types.PopularResult, error) {
 	return []types.PopularResult{}, nil
 }
 

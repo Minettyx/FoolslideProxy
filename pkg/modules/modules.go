@@ -11,7 +11,7 @@ import (
 )
 
 var Modules = [...]types.Module{
-	nil, // local module to bypass dependencies cycle, initialized in server/router.go
+	nil, // local module to bypass dependencies cycle, initialized in ./local/local.go
 	ccm.Module,
 	juinjutsu.Module,
 	mangaworld.Module,

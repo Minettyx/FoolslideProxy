@@ -16,27 +16,27 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-type MangaWorld struct {
+type mangaWorld struct {
 	baseUrl string
 }
 
-var Module = MangaWorld{
+var Module = mangaWorld{
 	baseUrl: "https://www.mangaworld.ac/",
 }
 
-var _ types.Module = MangaWorld{}
+var _ types.Module = mangaWorld{}
 
-func (c MangaWorld) Id() string {
+func (c mangaWorld) Id() string {
 	return "mw"
 }
-func (c MangaWorld) Name() string {
+func (c mangaWorld) Name() string {
 	return "MangaWorld"
 }
-func (c MangaWorld) Flags() types.ModuleFlags {
+func (c mangaWorld) Flags() types.ModuleFlags {
 	return []types.ModuleFlag{}
 }
 
-func (c MangaWorld) Search(query string) ([]types.SearchResult, error) {
+func (c mangaWorld) Search(query string) ([]types.SearchResult, error) {
 	res, err := http.Get(c.baseUrl + "archive?keyword=" + query)
 	if err != nil {
 		return nil, err
@@ -73,7 +73,7 @@ func (c MangaWorld) Search(query string) ([]types.SearchResult, error) {
 	return results, nil
 }
 
-func (c MangaWorld) Manga(id string) (*types.Manga, error) {
+func (c mangaWorld) Manga(id string) (*types.Manga, error) {
 	res, err := http.Get(c.baseUrl + "manga/" + id)
 	if err != nil {
 		return nil, err
@@ -140,7 +140,7 @@ func (c MangaWorld) Manga(id string) (*types.Manga, error) {
 	return &manga, nil
 }
 
-func (c MangaWorld) Chapter(manga, id string) ([]string, error) {
+func (c mangaWorld) Chapter(manga, id string) ([]string, error) {
 	res, err := http.Get(c.baseUrl + "manga/" + manga + "/read/" + id)
 	if err != nil {
 		return nil, err
@@ -181,11 +181,11 @@ func (c MangaWorld) Chapter(manga, id string) ([]string, error) {
 	return pages, nil
 }
 
-func (c MangaWorld) Latest() ([]types.LatestResult, error) {
+func (c mangaWorld) Latest() ([]types.LatestResult, error) {
 	return []types.LatestResult{}, nil
 }
 
-func (c MangaWorld) Popular() ([]types.PopularResult, error) {
+func (c mangaWorld) Popular() ([]types.PopularResult, error) {
 	return []types.PopularResult{}, nil
 }
 

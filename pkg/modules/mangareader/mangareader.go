@@ -15,27 +15,27 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-type MangaReader struct {
+type mangaReader struct {
 	baseUrl string
 }
 
-var Module = MangaReader{
+var Module = mangaReader{
 	baseUrl: "https://mangareader.to",
 }
 
-var _ types.Module = MangaReader{}
+var _ types.Module = mangaReader{}
 
-func (c MangaReader) Id() string {
+func (c mangaReader) Id() string {
 	return "mr"
 }
-func (c MangaReader) Name() string {
+func (c mangaReader) Name() string {
 	return "MangaReader"
 }
-func (c MangaReader) Flags() types.ModuleFlags {
+func (c mangaReader) Flags() types.ModuleFlags {
 	return []types.ModuleFlag{types.DISABLE_GLOBAL_SEARCH}
 }
 
-func (c MangaReader) Search(query string) ([]types.SearchResult, error) {
+func (c mangaReader) Search(query string) ([]types.SearchResult, error) {
 	if len(query) < 1 {
 		return []types.SearchResult{}, nil
 	}
@@ -76,7 +76,7 @@ func (c MangaReader) Search(query string) ([]types.SearchResult, error) {
 	return results, nil
 }
 
-func (c MangaReader) Manga(id string) (*types.Manga, error) {
+func (c mangaReader) Manga(id string) (*types.Manga, error) {
 	p := strings.Split(id, "|")
 	if len(p) < 2 {
 		return nil, fmt.Errorf("Language not found in manga id")
@@ -135,7 +135,7 @@ func (c MangaReader) Manga(id string) (*types.Manga, error) {
 	}, nil
 }
 
-func (c MangaReader) Chapter(manga, id string) ([]string, error) {
+func (c mangaReader) Chapter(manga, id string) ([]string, error) {
 	doc, err := utils.GetAndGoquery(c.baseUrl + id)
 	if err != nil {
 		return nil, err
@@ -174,7 +174,7 @@ func (c MangaReader) Chapter(manga, id string) ([]string, error) {
 	return res, nil
 }
 
-func (c MangaReader) Image(manga, chapter, id string, w io.Writer) error {
+func (c mangaReader) Image(manga, chapter, id string, w io.Writer) error {
 	println(manga, chapter, id)
 
 	origin, err := http.Get(id)
@@ -198,10 +198,10 @@ func (c MangaReader) Image(manga, chapter, id string, w io.Writer) error {
 	return nil
 }
 
-func (c MangaReader) Latest() ([]types.LatestResult, error) {
+func (c mangaReader) Latest() ([]types.LatestResult, error) {
 	return []types.LatestResult{}, nil
 }
 
-func (c MangaReader) Popular() ([]types.PopularResult, error) {
+func (c mangaReader) Popular() ([]types.PopularResult, error) {
 	return []types.PopularResult{}, nil
 }

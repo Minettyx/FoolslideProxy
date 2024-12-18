@@ -11,27 +11,27 @@ import (
 	"time"
 )
 
-type CCM struct {
+type ccm struct {
 	baseUrl string
 }
 
-var Module = CCM{
+var Module = ccm{
 	baseUrl: "https://ccm.0kb.eu/api/",
 }
 
-var _ types.Module = CCM{}
+var _ types.Module = ccm{}
 
-func (c CCM) Id() string {
+func (c ccm) Id() string {
 	return "ccm"
 }
-func (c CCM) Name() string {
+func (c ccm) Name() string {
 	return "CCM Translations"
 }
-func (c CCM) Flags() types.ModuleFlags {
+func (c ccm) Flags() types.ModuleFlags {
 	return []types.ModuleFlag{}
 }
 
-func (c CCM) Search(query string) ([]types.SearchResult, error) {
+func (c ccm) Search(query string) ([]types.SearchResult, error) {
 
 	var data []ccmMangasReq
 	err, _ := utils.GetAndJsonParse(c.baseUrl+"mangas.json", &data)
@@ -55,7 +55,7 @@ func (c CCM) Search(query string) ([]types.SearchResult, error) {
 	return result, nil
 }
 
-func (c CCM) Manga(mangaid string) (*types.Manga, error) {
+func (c ccm) Manga(mangaid string) (*types.Manga, error) {
 	var data ccmMangaReq
 	err, notfound := getJsonParseAndNotFound(c.baseUrl+"manga/"+url.QueryEscape(mangaid)+".json", &data)
 	if notfound {
@@ -85,7 +85,7 @@ func (c CCM) Manga(mangaid string) (*types.Manga, error) {
 	}, nil
 }
 
-func (c CCM) Chapter(manga string, id string) ([]string, error) {
+func (c ccm) Chapter(manga string, id string) ([]string, error) {
 	var data ccmChapterReq
 	err, notfound := getJsonParseAndNotFound(c.baseUrl+"chapter/"+url.QueryEscape(manga)+"/"+url.QueryEscape(id)+".json", &data)
 	if notfound {
@@ -98,11 +98,11 @@ func (c CCM) Chapter(manga string, id string) ([]string, error) {
 	return data.Images, nil
 }
 
-func (c CCM) Latest() ([]types.LatestResult, error) {
+func (c ccm) Latest() ([]types.LatestResult, error) {
 	return []types.LatestResult{}, nil
 }
 
-func (c CCM) Popular() ([]types.PopularResult, error) {
+func (c ccm) Popular() ([]types.PopularResult, error) {
 	return []types.PopularResult{}, nil
 }
 

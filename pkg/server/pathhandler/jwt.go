@@ -12,9 +12,11 @@ type jWTHandler struct{}
 
 var JWTHandler = jWTHandler{}
 
+var _ PathHandler = jWTHandler{}
+
 var SIGN_TOKEN = os.Getenv("SIGN_TOKEN")
 
-func (*jWTHandler) MangaPath(modId string, id string) string {
+func (jWTHandler) MangaPath(modId string, id string) string {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"mod":   modId,
 		"manga": id,
@@ -28,7 +30,7 @@ func (*jWTHandler) MangaPath(modId string, id string) string {
 	return "jwt-" + tokenString
 }
 
-func (*jWTHandler) ChapterPath(modId string, manga string, id string) string {
+func (jWTHandler) ChapterPath(modId string, manga string, id string) string {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"mod":     modId,
 		"manga":   manga,
@@ -40,7 +42,7 @@ func (*jWTHandler) ChapterPath(modId string, manga string, id string) string {
 	return "jwt-" + tokenString
 }
 
-func (*jWTHandler) ImagePath(modId string, manga string, chapter string, id string) string {
+func (jWTHandler) ImagePath(modId string, manga string, chapter string, id string) string {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"mod":     modId,
 		"manga":   manga,
@@ -53,7 +55,7 @@ func (*jWTHandler) ImagePath(modId string, manga string, chapter string, id stri
 	return "jwt-" + tokenString
 }
 
-func (*jWTHandler) ParseMangaPath(path string) (*MangaPath, error) {
+func (jWTHandler) ParseMangaPath(path string) (*MangaPath, error) {
 
 	if !strings.HasPrefix(path, "jwt-") {
 		return nil, fmt.Errorf("Invalid path")
@@ -80,7 +82,7 @@ func (*jWTHandler) ParseMangaPath(path string) (*MangaPath, error) {
 	}
 }
 
-func (*jWTHandler) ParseChapterPath(path string) (*ChapterPath, error) {
+func (jWTHandler) ParseChapterPath(path string) (*ChapterPath, error) {
 	if !strings.HasPrefix(path, "jwt-") {
 		return nil, fmt.Errorf("Invalid path")
 	}
@@ -107,7 +109,7 @@ func (*jWTHandler) ParseChapterPath(path string) (*ChapterPath, error) {
 	}
 }
 
-func (*jWTHandler) ParseImagePath(path string) (*ImagePath, error) {
+func (jWTHandler) ParseImagePath(path string) (*ImagePath, error) {
 	if !strings.HasPrefix(path, "jwt-") {
 		return nil, fmt.Errorf("Invalid path")
 	}

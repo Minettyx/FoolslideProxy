@@ -14,27 +14,27 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-type JuinJutsu struct {
+type juinJutsu struct {
 	baseUrl string
 }
 
-var Module = JuinJutsu{
+var Module = juinJutsu{
 	baseUrl: "https://juinjutsureader.ovh/",
 }
 
-var _ types.Module = JuinJutsu{}
+var _ types.Module = juinJutsu{}
 
-func (c JuinJutsu) Id() string {
+func (c juinJutsu) Id() string {
 	return "jj"
 }
-func (c JuinJutsu) Name() string {
+func (c juinJutsu) Name() string {
 	return "JuinJutsu"
 }
-func (c JuinJutsu) Flags() types.ModuleFlags {
+func (c juinJutsu) Flags() types.ModuleFlags {
 	return []types.ModuleFlag{}
 }
 
-func (c JuinJutsu) Search(query string) ([]types.SearchResult, error) {
+func (c juinJutsu) Search(query string) ([]types.SearchResult, error) {
 	res, err := http.PostForm(c.baseUrl+"search/", url.Values{
 		"search": {query},
 	})
@@ -75,7 +75,7 @@ func (c JuinJutsu) Search(query string) ([]types.SearchResult, error) {
 	return results, nil
 }
 
-func (c JuinJutsu) Manga(id string) (*types.Manga, error) {
+func (c juinJutsu) Manga(id string) (*types.Manga, error) {
 	res, err := http.Get(c.baseUrl + "series/" + id)
 	if err != nil {
 		return nil, err
@@ -142,7 +142,7 @@ func (c JuinJutsu) Manga(id string) (*types.Manga, error) {
 	return &result, nil
 }
 
-func (c JuinJutsu) Chapter(manga, id string) ([]string, error) {
+func (c juinJutsu) Chapter(manga, id string) ([]string, error) {
 	res, err := http.Get(c.baseUrl + "read/" + manga + id)
 	if err != nil {
 		return nil, err
@@ -182,11 +182,11 @@ func (c JuinJutsu) Chapter(manga, id string) ([]string, error) {
 	return result, nil
 }
 
-func (c JuinJutsu) Latest() ([]types.LatestResult, error) {
+func (c juinJutsu) Latest() ([]types.LatestResult, error) {
 	return []types.LatestResult{}, nil
 }
 
-func (c JuinJutsu) Popular() ([]types.PopularResult, error) {
+func (c juinJutsu) Popular() ([]types.PopularResult, error) {
 	return []types.PopularResult{}, nil
 }
 
