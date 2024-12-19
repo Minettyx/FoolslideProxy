@@ -15,9 +15,8 @@ import (
 
 func Latest1(w http.ResponseWriter, r *http.Request) {
 
-	pathdlr := pathhandler.MixHandler
 	trans := transformer.Transformer{
-		PathHandler: &pathdlr,
+		PathHandler: pathhandler.MixHandler,
 	}
 
 	var wg sync.WaitGroup

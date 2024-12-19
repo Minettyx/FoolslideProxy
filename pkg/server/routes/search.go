@@ -27,9 +27,8 @@ func isSpecific(search string) types.Module {
 }
 
 func Search(w http.ResponseWriter, r *http.Request) {
-	pathdlr := pathhandler.MixHandler
 	trans := transformer.Transformer{
-		PathHandler: &pathdlr,
+		PathHandler: pathhandler.MixHandler,
 	}
 
 	err := r.ParseForm()
@@ -50,10 +49,6 @@ func Search(w http.ResponseWriter, r *http.Request) {
 	specific := isSpecific(search)
 
 	if specific != nil {
-
-		if specific.Search == nil {
-			return
-		}
 
 		search = strings.TrimSpace(search[len(specific.Id())+1:])
 

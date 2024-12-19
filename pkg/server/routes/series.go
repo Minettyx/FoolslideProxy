@@ -23,7 +23,7 @@ func Series(w http.ResponseWriter, r *http.Request) {
 	}
 
 	trans := transformer.Transformer{
-		PathHandler: &pathdlr,
+		PathHandler: pathdlr,
 	}
 
 	for _, mod := range modules.Modules {
