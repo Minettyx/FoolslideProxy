@@ -7,7 +7,6 @@ import (
 	"strings"
 )
 
-var hexRegex = regexp.MustCompile("^([0-9a-fA-F][0-9a-fA-F])+$")
 var modRegex = regexp.MustCompile("^[a-zA-Z]+$")
 
 type hexHandler struct{}
