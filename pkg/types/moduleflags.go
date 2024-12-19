@@ -5,7 +5,7 @@ type ModuleFlags []ModuleFlag
 
 const (
 	DISABLE_GLOBAL_SEARCH ModuleFlag = iota
-	HIDDEL
+	HIDDEN
 )
 
 func (flags ModuleFlags) Has(flag ModuleFlag) bool {

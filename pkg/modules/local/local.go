@@ -25,7 +25,7 @@ var db = [](func() *mangaDB){
 		chs := []chapterDB{}
 
 		for _, mod := range modules.Modules {
-			if mod.Flags().Has(types.HIDDEL) {
+			if mod.Flags().Has(types.HIDDEN) {
 				continue
 			}
 
@@ -79,7 +79,7 @@ func (c localModule) Name() string {
 	return "internal"
 }
 func (c localModule) Flags() types.ModuleFlags {
-	return types.ModuleFlags{types.HIDDEL, types.DISABLE_GLOBAL_SEARCH}
+	return types.ModuleFlags{types.HIDDEN, types.DISABLE_GLOBAL_SEARCH}
 }
 
 func (c localModule) Popular() ([]types.PopularResult, error) {
