@@ -31,7 +31,7 @@ func (c juinJutsu) Name() string {
 	return "JuinJutsu"
 }
 func (c juinJutsu) Flags() types.ModuleFlags {
-	return []types.ModuleFlag{}
+	return types.ModuleFlags{}
 }
 
 func (c juinJutsu) Search(query string) ([]types.SearchResult, error) {

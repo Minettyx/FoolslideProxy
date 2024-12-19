@@ -31,7 +31,7 @@ func (c onePiecePower) Name() string {
 	return "One Piece Power"
 }
 func (c onePiecePower) Flags() types.ModuleFlags {
-	return []types.ModuleFlag{}
+	return types.ModuleFlags{}
 }
 
 func (c onePiecePower) Search(query string) ([]types.SearchResult, error) {

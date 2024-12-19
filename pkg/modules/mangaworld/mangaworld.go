@@ -33,7 +33,7 @@ func (c mangaWorld) Name() string {
 	return "MangaWorld"
 }
 func (c mangaWorld) Flags() types.ModuleFlags {
-	return []types.ModuleFlag{}
+	return types.ModuleFlags{}
 }
 
 func (c mangaWorld) Search(query string) ([]types.SearchResult, error) {

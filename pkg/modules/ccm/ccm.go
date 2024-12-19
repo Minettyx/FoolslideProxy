@@ -28,7 +28,7 @@ func (c ccm) Name() string {
 	return "CCM Translations"
 }
 func (c ccm) Flags() types.ModuleFlags {
-	return []types.ModuleFlag{}
+	return types.ModuleFlags{}
 }
 
 func (c ccm) Search(query string) ([]types.SearchResult, error) {

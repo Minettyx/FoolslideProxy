@@ -32,7 +32,7 @@ func (c mangaReader) Name() string {
 	return "MangaReader"
 }
 func (c mangaReader) Flags() types.ModuleFlags {
-	return []types.ModuleFlag{types.DISABLE_GLOBAL_SEARCH}
+	return types.ModuleFlags{types.DISABLE_GLOBAL_SEARCH}
 }
 
 func (c mangaReader) Search(query string) ([]types.SearchResult, error) {

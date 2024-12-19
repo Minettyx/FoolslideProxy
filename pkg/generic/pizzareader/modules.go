@@ -7,27 +7,27 @@ import (
 var DDTHastaTeam = pizzaReader{
 	moduleId:    "ddtht",
 	moduleName:  "DDT HastaTeam",
-	moduleFlags: []types.ModuleFlag{},
+	moduleFlags: types.ModuleFlags{},
 	baseUrl:     "https://ddt.hastateam.com",
 }
 
 var HastaTeam = pizzaReader{
 	moduleId:    "ht",
 	moduleName:  "HastaTeam",
-	moduleFlags: []types.ModuleFlag{},
+	moduleFlags: types.ModuleFlags{},
 	baseUrl:     "https://reader.hastateam.com",
 }
 
 var TuttoAnimeManga = pizzaReader{
 	moduleId:    "tam",
 	moduleName:  "TuttoAnimeManga",
-	moduleFlags: []types.ModuleFlag{},
+	moduleFlags: types.ModuleFlags{},
 	baseUrl:     "https://tuttoanimemanga.net",
 }
 
 var PhoenixScans = pizzaReader{
 	moduleId:    "ps",
 	moduleName:  "Phoenix Scans",
-	moduleFlags: []types.ModuleFlag{},
+	moduleFlags: types.ModuleFlags{},
 	baseUrl:     "https://www.phoenixscans.com",
 }
