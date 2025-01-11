@@ -2,6 +2,7 @@ package mangaworld
 
 import (
 	"bytes"
+	_ "embed"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -12,9 +13,13 @@ import (
 
 	"github.com/Minettyx/FoolslideProxy/pkg/types"
 	"github.com/Minettyx/FoolslideProxy/pkg/utils"
+	"github.com/dop251/goja"
 
 	"github.com/PuerkitoBio/goquery"
 )
+
+//go:embed aes.min.js
+var aesMinJs string
 
 type mangaWorld struct {
 	baseUrl string
@@ -36,8 +41,44 @@ func (c mangaWorld) Flags() types.ModuleFlags {
 	return types.ModuleFlags{}
 }
 
+func client(req *http.Request) (*http.Response, error) {
+
+	client := http.Client{}
+	res, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	bodyB, err := io.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+	body := string(bodyB)
+	body, _ = utils.StrBetweenFirst(body, "<script>", "location.href")
+	body = strings.Replace(body, "document.cookie", "const finalcookie", 1)
+
+	code := aesMinJs + "\n\n" + body
+
+	vm := goja.New()
+	_, err = vm.RunString(code)
+	if err != nil {
+		return nil, err
+	}
+
+	var finalcookie string
+	err = vm.ExportTo(vm.Get("finalcookie"), &finalcookie)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("Cookie", finalcookie)
+
+	return client.Do(req)
+}
+
 func (c mangaWorld) Search(query string) ([]types.SearchResult, error) {
-	res, err := http.Get(c.baseUrl + "archive?keyword=" + query)
+	req, _ := http.NewRequest("GET", c.baseUrl+"archive?keyword="+query, nil)
+	res, err := client(req)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +115,8 @@ func (c mangaWorld) Search(query string) ([]types.SearchResult, error) {
 }
 
 func (c mangaWorld) Manga(id string) (*types.Manga, error) {
-	res, err := http.Get(c.baseUrl + "manga/" + id)
+	req, _ := http.NewRequest("GET", c.baseUrl+"manga/"+id, nil)
+	res, err := client(req)
 	if err != nil {
 		return nil, err
 	}
@@ -141,7 +183,8 @@ func (c mangaWorld) Manga(id string) (*types.Manga, error) {
 }
 
 func (c mangaWorld) Chapter(manga, id string) ([]string, error) {
-	res, err := http.Get(c.baseUrl + "manga/" + manga + "/read/" + id)
+	req, _ := http.NewRequest("GET", c.baseUrl+"manga/"+manga+"/read/"+id, nil)
+	res, err := client(req)
 	if err != nil {
 		return nil, err
 	}
