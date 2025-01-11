@@ -23,19 +23,29 @@ var aesMinJs string
 
 type mangaWorld struct {
 	baseUrl string
+	name    string
+	id      string
 }
 
 var Module = mangaWorld{
 	baseUrl: "https://www.mangaworld.ac/",
+	name:    "MangaWorld",
+	id:      "mw",
+}
+
+var ModuleAdult = mangaWorld{
+	baseUrl: "https://www.mangaworldadult.net/",
+	name:    "MangaWorld adult",
+	id:      "mwa",
 }
 
 var _ types.Module = mangaWorld{}
 
 func (c mangaWorld) Id() string {
-	return "mw"
+	return c.id
 }
 func (c mangaWorld) Name() string {
-	return "MangaWorld"
+	return c.name
 }
 func (c mangaWorld) Flags() types.ModuleFlags {
 	return types.ModuleFlags{}
@@ -43,8 +53,12 @@ func (c mangaWorld) Flags() types.ModuleFlags {
 
 func client(req *http.Request) (*http.Response, error) {
 
-	client := http.Client{}
-	res, err := client.Do(req)
+	hclient := http.Client{
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			return http.ErrUseLastResponse
+		},
+	}
+	res, err := hclient.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +87,18 @@ func client(req *http.Request) (*http.Response, error) {
 
 	req.Header.Set("Cookie", finalcookie)
 
-	return client.Do(req)
+	finalres, err := hclient.Do(req)
+	if err != nil {
+		return finalres, err
+	}
+
+	if finalres.StatusCode == 301 || finalres.StatusCode == 302 {
+		loc, _ := finalres.Location()
+		recreq, _ := http.NewRequest("GET", loc.String(), nil)
+		return client(recreq)
+	}
+
+	return finalres, err
 }
 
 func (c mangaWorld) Search(query string) ([]types.SearchResult, error) {

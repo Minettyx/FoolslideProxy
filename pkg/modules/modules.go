@@ -15,6 +15,7 @@ var Modules = [...]types.Module{
 	ccm.Module,
 	juinjutsu.Module,
 	mangaworld.Module,
+	mangaworld.ModuleAdult,
 	onepiecepower.Module,
 	mangareader.Module,
 
