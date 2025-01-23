@@ -13,13 +13,9 @@ import (
 
 	"github.com/Minettyx/FoolslideProxy/pkg/types"
 	"github.com/Minettyx/FoolslideProxy/pkg/utils"
-	"github.com/dop251/goja"
 
 	"github.com/PuerkitoBio/goquery"
 )
-
-//go:embed aes.min.js
-var aesMinJs string
 
 type mangaWorld struct {
 	baseUrl string
@@ -63,29 +59,15 @@ func client(req *http.Request) (*http.Response, error) {
 		return nil, err
 	}
 
+	defer res.Body.Close()
 	bodyB, err := io.ReadAll(res.Body)
 	if err != nil {
 		return nil, err
 	}
 	body := string(bodyB)
-	body, _ = utils.StrBetweenFirst(body, "<script>", "location.href")
-	body = strings.Replace(body, "document.cookie", "const finalcookie", 1)
+	cookie, _ := utils.StrBetweenFirst(body, "MWCookie=", " ;")
 
-	code := aesMinJs + "\n\n" + body
-
-	vm := goja.New()
-	_, err = vm.RunString(code)
-	if err != nil {
-		return nil, err
-	}
-
-	var finalcookie string
-	err = vm.ExportTo(vm.Get("finalcookie"), &finalcookie)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Set("Cookie", finalcookie)
+	req.Header.Add("Cookie", "MWCookie="+cookie)
 
 	finalres, err := hclient.Do(req)
 	if err != nil {
